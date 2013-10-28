@@ -2,11 +2,16 @@ package ui;
 
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.ui.*;
+import com.vaadin.annotations.Theme;
+import com.vaadin.annotations.Title;
+
 
 /**
  *
  */
-public class Backend extends UI  {
+@Theme("dashboard")
+@Title("Octopus")
+public class BackendUI extends UI  {
 
     @Override
     protected void init(VaadinRequest vaadinRequest) {

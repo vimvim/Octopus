@@ -18,6 +18,9 @@ object Global extends GlobalSettings with VaadinSupport {
   * @param app
   */
   override def onStart(app: Application) {
+
+    super.onStart(app)
+
     ctx.start()
 
     // val dao: UsersDao = ctx.getBean(classOf[UsersDao])
@@ -33,6 +36,8 @@ object Global extends GlobalSettings with VaadinSupport {
   override def onStop(app: Application) {
 
     ctx.stop()
+
+    super.onStop(app)
   }
 
   /**
