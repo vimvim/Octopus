@@ -2,10 +2,11 @@
 import models.User
 import org.springframework.context.support.ClassPathXmlApplicationContext
 
+import org.vaadin.playintegration.VaadinSupport
 import play.api._
 import repositories.UsersDao
 
-object Global extends GlobalSettings {
+object Global extends GlobalSettings with VaadinSupport {
 
   /**
   * Declare the application context to be used.
@@ -19,9 +20,9 @@ object Global extends GlobalSettings {
   override def onStart(app: Application) {
     ctx.start()
 
-    val dao: UsersDao = ctx.getBean(classOf[UsersDao])
+    // val dao: UsersDao = ctx.getBean(classOf[UsersDao])
 
-    dao.save(new User("test1"))
+    // dao.save(new User("test1"))
 
   }
 
