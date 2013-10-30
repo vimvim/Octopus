@@ -23,6 +23,7 @@ object Global extends GlobalSettings with VaadinSupport {
 
     ctx.start()
 
+
     // val dao: UsersDao = ctx.getBean(classOf[UsersDao])
 
     // dao.save(new User("test1"))
