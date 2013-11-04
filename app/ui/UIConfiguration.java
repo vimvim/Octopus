@@ -16,7 +16,7 @@ public class UIConfiguration {
         return helpManager;
     }
 
-    public void setHelpManager(HelpManager helpManager) {
+    public static void setHelpManager(HelpManager helpManager) {
         UIConfiguration.helpManager = helpManager;
     }
 }

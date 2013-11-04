@@ -69,11 +69,4 @@
 
     <bean class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer"/>
 
-
-    <!-- http://docs.spring.io/spring-javaconfig/docs/1.0.0.M4/reference/html/ch06.html -->
-    <bean class="com.myapp.config.DataConfig"/>
-
-    <!-- be sure to include the JavaConfig bean post-processor -->
-    <bean class="org.springframework.config.java.process.ConfigurationPostProcessor"/>
-
 </beans>
