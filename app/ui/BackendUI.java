@@ -15,13 +15,19 @@ import java.util.Locale;
 @Title("Octopus")
 public class BackendUI extends UI  {
 
+    HelpManager helpManager;
+
     CssLayout root = new CssLayout();
 
     CssLayout menu = new CssLayout();
     CssLayout content = new CssLayout();
 
+    LoginView loginView;
+
     @Override
     protected void init(VaadinRequest vaadinRequest) {
+
+        this.helpManager = new HelpManager(this);
 
         /*
         setContent(new Button("Click me!", new Button.ClickListener() {
@@ -48,6 +54,16 @@ public class BackendUI extends UI  {
         bg.setSizeUndefined();
         bg.addStyleName("login-bg");
         root.addComponent(bg);
+
+        this.loginView = new LoginView(this.helpManager);
+
+        HelpOverlay w = helpManager
+                .addOverlay(
+                        "Welcome to the Dashboard Demo Application",
+                        "<p>This application is not real, it only demonstrates an application built with the <a href=\"http://vaadin.com\">Vaadin framework</a>.</p><p>No username or password is required, just click the ‘Sign In’ button to continue. You can try out a random username and password, though.</p>",
+                        "login");
+        w.center();
+        addWindow(w);
     }
 
 }

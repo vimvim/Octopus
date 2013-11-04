@@ -12,6 +12,12 @@ public class LoginView {
 
     private VerticalLayout layout;
 
+    private HelpManager helpManager;
+
+    public LoginView(HelpManager helpManager) {
+        this.helpManager = helpManager;
+    }
+
     public Component getComponent() {
         return layout;
     }
