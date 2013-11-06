@@ -46,6 +46,8 @@ object ApplicationBuild extends Build {
     "org.mockito" % "mockito-all" % "1.9.0",
     "org.springframework" % "spring-context" % "3.2.3.RELEASE",
     "org.springframework" % "spring-context" % "3.2.4.RELEASE",
+    "org.springframework" % "spring-beans" % "3.2.4.RELEASE",
+    "org.springframework" % "spring-aspects" % "3.2.4.RELEASE",
     "org.springframework.data" % "spring-data-jpa" % "1.4.2.RELEASE",
     "org.hibernate" % "hibernate-core" % "4.2.7.SP1" ,
     "org.hibernate" % "hibernate-entitymanager" % "4.2.7.SP1" ,
@@ -55,7 +57,9 @@ object ApplicationBuild extends Build {
   )
 
   val main = play.Project(appName, appVersion, appDependencies).settings(
-    // Add your own project settings here      
+    Keys.javaOptions in (Runtime) +=
+      "-javaagent:/Users/vim/.ivy2/cache/org.springframework/spring-instrument/jars/spring-instrument-3.2.2.RELEASE.jar"
+    // Add your own project settings here
   )
 
 }

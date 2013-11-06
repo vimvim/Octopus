@@ -15,8 +15,10 @@
 
 
     <context:annotation-config/>
+    <!-- <context:spring-configured/>  -->
+    <!-- <context:load-time-weaver/>   -->
 
-    <context:component-scan base-package="controllers, services, repositories, models" />
+    <context:component-scan base-package="controllers, services, repositories, models, ui" />
 
     <!--<tx:annotation-driven mode="proxy"/> -->
     <tx:annotation-driven transaction-manager="transactionManager"/>
@@ -67,6 +69,23 @@
         <property name="entityManagerFactory" ref="entityManagerFactory"/>
     </bean>
 
+    <bean class="org.springframework.beans.factory.config.CustomScopeConfigurer">
+        <property name="scopes">
+            <map>
+                <entry key="session">
+                    <bean class="spring.VaadinSessionScope"/>
+                </entry>
+            </map>
+        </property>
+    </bean>
+
+    <bean id="uiEventBus" class="com.google.common.eventbus.EventBus" scope="session"/>
+
     <bean class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer"/>
+
+    <!-- Turn on @Autowired, @PostConstruct etc support -->
+    <bean class="org.springframework.beans.factory.annotation.AutowiredAnnotationBeanPostProcessor" />
+    <bean class="org.springframework.context.annotation.CommonAnnotationBeanPostProcessor" />
+
 
 </beans>

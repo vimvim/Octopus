@@ -5,6 +5,7 @@ import org.springframework.context.support.ClassPathXmlApplicationContext
 import org.vaadin.playintegration.VaadinSupport
 import play.api._
 import repositories.UsersDao
+import spring.SpringContextHolder
 
 object Global extends GlobalSettings with VaadinSupport {
 
@@ -21,7 +22,7 @@ object Global extends GlobalSettings with VaadinSupport {
 
     super.onStart(app)
 
-    ctx.start()
+    SpringContextHolder.getContext.start()
 
 
     // val dao: UsersDao = ctx.getBean(classOf[UsersDao])
@@ -36,7 +37,7 @@ object Global extends GlobalSettings with VaadinSupport {
   */
   override def onStop(app: Application) {
 
-    ctx.stop()
+    SpringContextHolder.getContext.stop()
 
     super.onStop(app)
   }

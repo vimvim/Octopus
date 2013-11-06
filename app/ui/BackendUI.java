@@ -1,11 +1,15 @@
 package ui;
 
+import com.google.common.eventbus.EventBus;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.ui.*;
 import com.vaadin.annotations.Theme;
 import com.vaadin.annotations.Title;
+import spring.SpringContextHolder;
 
+import java.util.HashMap;
 import java.util.Locale;
+import java.util.Map;
 
 
 /**
@@ -24,10 +28,21 @@ public class BackendUI extends UI  {
 
     LoginView loginView;
 
+    EventBus eventBus;
+
+    Map<String,Object> componentsStorage = new HashMap();
+
+    public Map<String,Object> getComponentsStorage() {
+        return componentsStorage;
+    }
+
     @Override
     protected void init(VaadinRequest vaadinRequest) {
 
-        this.helpManager = new HelpManager(this);
+        helpManager = new HelpManager(this);
+
+        eventBus = (EventBus) SpringContextHolder.getContext().getBean("uiEventBus");
+        loginView = SpringContextHolder.getContext().getBean(LoginView.class);
 
         /*
         setContent(new Button("Click me!", new Button.ClickListener() {
@@ -55,8 +70,6 @@ public class BackendUI extends UI  {
         bg.addStyleName("login-bg");
         root.addComponent(bg);
 
-        this.loginView = new LoginView(this.helpManager);
-
         HelpOverlay w = helpManager
                 .addOverlay(
                         "Welcome to the Dashboard Demo Application",
@@ -64,6 +77,12 @@ public class BackendUI extends UI  {
                         "login");
         w.center();
         addWindow(w);
+
+        addStyleName("login");
+
+        // loginView = new LoginView(this.helpManager);
+        // loginView.create();
+        root.addComponent(loginView.getComponent());
     }
 
 }

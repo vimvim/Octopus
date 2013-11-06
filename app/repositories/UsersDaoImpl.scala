@@ -11,7 +11,7 @@ import models.User
 /**
  *
  */
-@Repository("usersDaoDao")
+@Repository("usersDao")
 @Transactional(readOnly = false, propagation = Propagation.REQUIRED)
 class UsersDaoImpl extends UsersDao {
 

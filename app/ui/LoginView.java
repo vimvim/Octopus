@@ -1,34 +1,49 @@
 package ui;
 
+import com.google.common.eventbus.EventBus;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Configurable;
+
 import com.vaadin.event.ShortcutAction;
 import com.vaadin.event.ShortcutListener;
 import com.vaadin.shared.ui.label.ContentMode;
 import com.vaadin.ui.*;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Scope;
+import ui.services.SessionService;
+
 
 /**
  *
  */
+@org.springframework.stereotype.Component
+@Scope("session")
 public class LoginView {
+
+    private SessionService sessionService;
+
+    private EventBus eventBus;
 
     private VerticalLayout layout;
 
-    private HelpManager helpManager;
+    private CssLayout loginPanel;
 
-    public LoginView(HelpManager helpManager) {
-        this.helpManager = helpManager;
-    }
+    private TextField username;
 
-    public Component getComponent() {
-        return layout;
-    }
+    private PasswordField password;
 
-    public void create() {
+    private Button signin;
+
+    @Autowired
+    public LoginView(SessionService sessionService) {
+
+        this.sessionService = sessionService;
 
         layout = new VerticalLayout();
         layout.setSizeFull();
         layout.addStyleName("login-layout");
 
-        final CssLayout loginPanel = new CssLayout();
+        loginPanel = new CssLayout();
         loginPanel.addStyleName("login-panel");
 
         HorizontalLayout labels = new HorizontalLayout();
@@ -43,7 +58,7 @@ public class LoginView {
         labels.addComponent(welcome);
         labels.setComponentAlignment(welcome, Alignment.MIDDLE_LEFT);
 
-        Label title = new Label("QuickTickets Dashboard");
+        Label title = new Label("Octopus Dashboard");
         title.setSizeUndefined();
         title.addStyleName("h2");
         title.addStyleName("light");
@@ -55,20 +70,21 @@ public class LoginView {
         fields.setMargin(true);
         fields.addStyleName("fields");
 
-        final TextField username = new TextField("Username");
+        username = new TextField("Username");
         username.focus();
         fields.addComponent(username);
 
-        final PasswordField password = new PasswordField("Password");
+        password = new PasswordField("Password");
         fields.addComponent(password);
 
-        final Button signin = new Button("Sign In");
+        signin = new Button("Sign In");
         signin.addStyleName("default");
         fields.addComponent(signin);
         fields.setComponentAlignment(signin, Alignment.BOTTOM_LEFT);
 
         final ShortcutListener enter = new ShortcutListener("Sign In",
                 ShortcutAction.KeyCode.ENTER, null) {
+
             @Override
             public void handleAction(Object sender, Object target) {
                 signin.click();
@@ -76,35 +92,18 @@ public class LoginView {
         };
 
         signin.addClickListener(new Button.ClickListener() {
+
             @Override
             public void buttonClick(Button.ClickEvent event) {
-                if (username.getValue() != null && username.getValue().equals("") && password.getValue() != null
-                        && password.getValue().equals("")) {
 
-                    signin.removeShortcutListener(enter);
+                if (username.getValue() == null || username.getValue().equals("") || password.getValue() == null
+                        || password.getValue().equals("")) {
 
-                    // buildMainView();
+                    onInvalidLogin("Please specify username and password");
 
                 } else {
 
-                    if (loginPanel.getComponentCount() > 2) {
-                        // Remove the previous error message
-                        loginPanel.removeComponent(loginPanel.getComponent(2));
-                    }
-
-                    // Add new error message
-                    Label error = new Label(
-                            "Wrong username or password. <span>Hint: try empty values</span>",
-                            ContentMode.HTML);
-
-                    error.addStyleName("error");
-                    error.setSizeUndefined();
-                    error.addStyleName("light");
-                    // Add animation
-                    error.addStyleName("v-animate-reveal");
-
-                    loginPanel.addComponent(error);
-                    username.focus();
+                    onLogin(username.getValue(), password.getValue());
                 }
             }
         });
@@ -117,4 +116,36 @@ public class LoginView {
         layout.setComponentAlignment(loginPanel, Alignment.MIDDLE_CENTER);
     }
 
+    public Component getComponent() {
+        return layout;
+    }
+
+    private void onLogin(String username, String password) {
+
+        if (!sessionService.auth(username, password)) {
+
+            onInvalidLogin("Invalid username or password");
+        }
+    }
+
+    private void onInvalidLogin(String message) {
+
+        if (loginPanel.getComponentCount() > 2) {
+            // Remove the previous error message
+            loginPanel.removeComponent(loginPanel.getComponent(2));
+        }
+
+        // Add new error message
+        Label error = new Label(message, ContentMode.HTML);
+
+        error.addStyleName("error");
+        error.setSizeUndefined();
+        error.addStyleName("light");
+        // Add animation
+        error.addStyleName("v-animate-reveal");
+
+        loginPanel.addComponent(error);
+        username.focus();
+
+    }
 }
