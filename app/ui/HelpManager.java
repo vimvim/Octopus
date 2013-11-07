@@ -3,27 +3,35 @@ package ui;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.google.common.eventbus.EventBus;
 import com.vaadin.navigator.View;
 import com.vaadin.shared.ui.label.ContentMode;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.UI;
+import org.springframework.stereotype.Component;
 
 /**
  *
  */
+@Component
 public class HelpManager {
 
     private UI ui;
+    private EventBus eventBus;
+
     private List<HelpOverlay> overlays = new ArrayList<HelpOverlay>();
 
-    public HelpManager(UI ui) {
+    public HelpManager(UI ui, EventBus eventBus) {
         this.ui = ui;
+        this.eventBus = eventBus;
     }
 
     public void closeAll() {
+
         for (HelpOverlay overlay : overlays) {
             overlay.close();
         }
+
         overlays.clear();
     }
 

@@ -1,11 +1,15 @@
 package ui;
 
 import com.google.common.eventbus.EventBus;
+import com.google.common.eventbus.Subscribe;
+import com.vaadin.navigator.Navigator;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.ui.*;
 import com.vaadin.annotations.Theme;
 import com.vaadin.annotations.Title;
 import spring.SpringContextHolder;
+import ui.events.LoggedInEvent;
+import ui.events.NavigateViewEvent;
 
 import java.util.HashMap;
 import java.util.Locale;
@@ -19,43 +23,47 @@ import java.util.Map;
 @Title("Octopus")
 public class BackendUI extends UI  {
 
+    Map<String,Class> views;
+
+    Map<String,Object> componentsStorage = new HashMap();
+
+    EventBus eventBus;
+
+    Navigator navigator;
+
     HelpManager helpManager;
 
     CssLayout root = new CssLayout();
 
-    CssLayout menu = new CssLayout();
-    CssLayout content = new CssLayout();
-
     LoginView loginView;
 
-    EventBus eventBus;
+    HorizontalLayout mainLayout;
 
-    Map<String,Object> componentsStorage = new HashMap();
+    CssLayout content;
 
     public Map<String,Object> getComponentsStorage() {
         return componentsStorage;
     }
 
+    public ComponentContainer getContentContainer() {
+        return content;
+    }
+
     @Override
     protected void init(VaadinRequest vaadinRequest) {
 
-        helpManager = new HelpManager(this);
-
         eventBus = (EventBus) SpringContextHolder.getContext().getBean("uiEventBus");
+        eventBus.register(this);
+
+        views = (Map<String,Class>) SpringContextHolder.getContext().getBean("uiViews");
+
+        navigator = new Navigator(this, content);
+        for (String route : views.keySet()) {
+            navigator.addView(route, views.get(route));
+        }
+
+        helpManager = SpringContextHolder.getContext().getBean(HelpManager.class);
         loginView = SpringContextHolder.getContext().getBean(LoginView.class);
-
-        /*
-        setContent(new Button("Click me!", new Button.ClickListener() {
-            @Override
-            public void buttonClick(Button.ClickEvent event) {
-                Notification.show("Hello World!");
-            }
-        }));
-        */
-
-        //  getSession().setConverterFactory(new MyConverterFactory());
-
-        // octopus.Global.ctx();
 
         setLocale(Locale.US);
 
@@ -83,6 +91,33 @@ public class BackendUI extends UI  {
         // loginView = new LoginView(this.helpManager);
         // loginView.create();
         root.addComponent(loginView.getComponent());
+    }
+
+    @Subscribe
+    public void onLoggedInEvent(LoggedInEvent event) {
+
+        removeStyleName("login");
+        root.removeComponent(loginView.getComponent());
+
+        SideBar sideBar = SpringContextHolder.getContext().getBean(SideBar.class);
+
+        mainLayout = new HorizontalLayout();
+
+        mainLayout.setSizeFull();
+        mainLayout.addStyleName("main-view");
+        mainLayout.addComponent(sideBar.getComponent());
+
+        content = new CssLayout();
+
+        mainLayout.addComponent(content);
+        content.setSizeFull();
+        content.addStyleName("view-content");
+        mainLayout.setExpandRatio(content, 1);
+    }
+
+    @Subscribe
+    public void onNavigateEvent(NavigateViewEvent navigateEvent) {
+        navigator.navigateTo("/"+navigateEvent.getRoute());
     }
 
 }

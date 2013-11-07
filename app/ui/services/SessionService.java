@@ -2,12 +2,12 @@ package ui.services;
 
 import com.google.common.eventbus.EventBus;
 import models.User;
-import org.springframework.beans.factory.annotation.Autowire;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Service;
 import repositories.UsersDao;
 import services.UsersService;
+import ui.events.LoggedInEvent;
 
 /**
  */
@@ -34,6 +34,8 @@ public class SessionService {
     public boolean auth(String username, String password) {
 
         // user = usersDao.getByUsername(username);
+
+        eventBus.post(new LoggedInEvent(null));
 
         return true;
     }

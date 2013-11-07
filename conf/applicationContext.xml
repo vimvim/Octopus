@@ -60,8 +60,7 @@
         </property>
     </bean>
 
-    <bean id="entityManager"
-          class="org.springframework.orm.jpa.support.SharedEntityManagerBean">
+    <bean id="entityManager" class="org.springframework.orm.jpa.support.SharedEntityManagerBean">
         <property name="entityManagerFactory" ref="entityManagerFactory"/>
     </bean>
 
@@ -80,6 +79,25 @@
     </bean>
 
     <bean id="uiEventBus" class="com.google.common.eventbus.EventBus" scope="session"/>
+
+    <bean id="uiViews" class="java.util.TreeMap">
+        <constructor-arg>
+            <map key-type="java.lang.String" value-type="java.lang.Class">
+                <entry key="dashboard" value="ui.views.DashboardView.class" />
+                <entry key="sales" value="ui.views.SalesView.class" />
+                <entry key="transactions" value="ui.views.TransactionsView.class" />
+                <entry key="reports" value="ui.views.ReportsView.class" />
+                <entry key="schedule" value="ui.views.ScheduleView.class" />
+            </map>
+        </constructor-arg>
+    </bean>
+
+    <!--
+    <bean id="uiNavigator" class="com.vaadin.navigator.Navigator">
+        <constructor-arg><ref bean="ui"/></constructor-arg>
+        <constructor-arg><ref bean="uiContentContainer"/></constructor-arg>
+    </bean>
+    -->
 
     <bean class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer"/>
 
