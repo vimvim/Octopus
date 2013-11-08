@@ -4,7 +4,7 @@ import org.springframework.context.support.ClassPathXmlApplicationContext
 
 import org.vaadin.playintegration.VaadinSupport
 import play.api._
-import repositories.UsersDao
+import repositories.UsersRepo
 import spring.SpringContextHolder
 
 object Global extends GlobalSettings with VaadinSupport {

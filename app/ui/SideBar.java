@@ -5,11 +5,13 @@ import com.vaadin.shared.ui.label.ContentMode;
 import com.vaadin.ui.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Scope;
 
 /**
  *
  */
 @org.springframework.stereotype.Component
+@Scope("session")
 public class SideBar {
 
     VerticalLayout layout;

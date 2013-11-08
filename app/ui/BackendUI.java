@@ -57,11 +57,6 @@ public class BackendUI extends UI  {
 
         views = (Map<String,Class>) SpringContextHolder.getContext().getBean("uiViews");
 
-        navigator = new Navigator(this, content);
-        for (String route : views.keySet()) {
-            navigator.addView(route, views.get(route));
-        }
-
         helpManager = SpringContextHolder.getContext().getBean(HelpManager.class);
         loginView = SpringContextHolder.getContext().getBean(LoginView.class);
 
@@ -113,6 +108,13 @@ public class BackendUI extends UI  {
         content.setSizeFull();
         content.addStyleName("view-content");
         mainLayout.setExpandRatio(content, 1);
+
+        navigator = new Navigator(this, content);
+        for (String route : views.keySet()) {
+            navigator.addView(route, views.get(route));
+        }
+
+        root.addComponent(mainLayout);
     }
 
     @Subscribe

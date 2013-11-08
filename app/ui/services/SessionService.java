@@ -5,8 +5,7 @@ import models.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Service;
-import repositories.UsersDao;
-import services.UsersService;
+import repositories.UsersRepo;
 import ui.events.LoggedInEvent;
 
 /**
@@ -16,19 +15,19 @@ import ui.events.LoggedInEvent;
 @Scope("session")
 public class SessionService {
 
-    private UsersService usersService;
+    private UserService userService;
 
-    private UsersDao usersDao;
+    private UsersRepo usersRepo;
 
     private EventBus eventBus;
 
     private User user;
 
     @Autowired
-    public SessionService(UsersService usersService, UsersDao usersDao, EventBus eventBus) {
-        this.usersService = usersService;
+    public SessionService(UserService userService, UsersRepo usersRepo, EventBus eventBus) {
+        this.userService = userService;
         this.eventBus = eventBus;
-        this.usersDao = usersDao;
+        this.usersRepo = usersRepo;
     }
 
     public boolean auth(String username, String password) {

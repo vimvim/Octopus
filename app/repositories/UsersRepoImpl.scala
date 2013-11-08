@@ -11,25 +11,9 @@ import models.User
 /**
  *
  */
-@Repository("usersDao")
+@Repository("usersRepo")
 @Transactional(readOnly = false, propagation = Propagation.REQUIRED)
-class UsersDaoImpl extends UsersDao {
-
-  @Autowired
-  var entityManager: EntityManager = _
-
-  def save(user: User): Unit = user.id match {
-    case 0 => entityManager.persist(user)
-    case _ => entityManager.merge(user)
-  }
-
-  def find(id: Int): Option[User] = {
-    Option(entityManager.find(classOf[User], id))
-  }
-
-  def getAll: List[User] = {
-    entityManager.createQuery("From User", classOf[User]).getResultList.toList
-  }
+class UsersRepoImpl extends AbstractNodesRepo[User] with UsersRepo {
 
   def getByUsername(lastName : String): List[User] = {
     entityManager.createQuery("From User Where username = :username", classOf[User]).setParameter("username", lastName).getResultList.toList

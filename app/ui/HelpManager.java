@@ -8,12 +8,15 @@ import com.vaadin.navigator.View;
 import com.vaadin.shared.ui.label.ContentMode;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.UI;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 /**
  *
  */
 @Component
+@Scope("session")
 public class HelpManager {
 
     private UI ui;
@@ -21,6 +24,7 @@ public class HelpManager {
 
     private List<HelpOverlay> overlays = new ArrayList<HelpOverlay>();
 
+    @Autowired
     public HelpManager(UI ui, EventBus eventBus) {
         this.ui = ui;
         this.eventBus = eventBus;

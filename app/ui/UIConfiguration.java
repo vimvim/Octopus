@@ -30,13 +30,4 @@ public class UIConfiguration {
         return UI.getCurrent();
     }
     */
-
-    @Bean
-    public HelpManager helpManager() throws Exception {
-        return helpManager;
-    }
-
-    public static void setHelpManager(HelpManager helpManager) {
-        UIConfiguration.helpManager = helpManager;
-    }
 }

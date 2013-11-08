@@ -5,12 +5,7 @@ import models.User
 /**
  *
  */
-trait UsersDao {
-  def save(user: User): Unit
-
-  def find(id: Int): Option[User]
-
-  def getAll: List[User]
+trait UsersRepo extends NodesRepo[User] {
 
   def getByUsername(lastName : String): List[User]
 }

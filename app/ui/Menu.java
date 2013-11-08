@@ -5,16 +5,20 @@ import com.vaadin.server.Page;
 import com.vaadin.ui.*;
 import com.vaadin.ui.Component;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.context.annotation.Scope;
 import ui.events.NavigateViewEvent;
 
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.SortedMap;
+import java.util.TreeMap;
 
 /**
  *
  */
 @org.springframework.stereotype.Component
+@Scope("session")
 public class Menu {
 
     /*
@@ -34,7 +38,7 @@ public class Menu {
     HashMap<String, Button> viewNameToMenuButton = new HashMap<String, Button>();
 
     @Autowired
-    public Menu(EventBus _eventBus, SortedMap<String, Class> views) {
+    public Menu(@Qualifier("uiEventBus") EventBus _eventBus, @Qualifier("uiViews") TreeMap<String, Class> views) {
 
         this.eventBus = _eventBus;
 
@@ -106,22 +110,22 @@ public class Menu {
             f = f.substring(1);
         }
 
-        if (f == null || f.equals("") || f.equals("/")) {
+        // if (f == null || f.equals("") || f.equals("/")) {
 
-            eventBus.post(new NavigateViewEvent(views.firstKey()));
+        //    eventBus.post(new NavigateViewEvent(views.firstKey()));
             // nav.navigateTo("/dashboard");
 
             layout.getComponent(0).addStyleName("selected");
 
             // helpManager.showHelpFor(DashboardView.class);
-        } else {
+        // } else {
 
-            eventBus.post(new NavigateViewEvent(f));
+        //    eventBus.post(new NavigateViewEvent(f));
             // nav.navigateTo(f);
 
             // helpManager.showHelpFor(routes.get(f));
-            viewNameToMenuButton.get(f).addStyleName("selected");
-        }
+        //    viewNameToMenuButton.get(f).addStyleName("selected");
+        // }
     }
 
     public Component getComponent() {

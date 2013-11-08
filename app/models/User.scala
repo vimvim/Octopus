@@ -5,12 +5,7 @@ import scala.reflect.BeanProperty
 
 @Entity
 @Table(name = "user")
-class User(_username: String) {
-
-  @Id
-  @GeneratedValue(strategy = GenerationType.AUTO)
-  @BeanProperty
-  var id: Int = _
+class User(_username: String) extends Node {
 
   @BeanProperty
   var username: String = _username

@@ -53,12 +53,13 @@ object ApplicationBuild extends Build {
     "org.hibernate" % "hibernate-entitymanager" % "4.2.7.SP1" ,
     "org.hibernate" % "hibernate-c3p0" % "4.2.7.SP1" ,
     "javax.transaction" % "jta" % "1.1" % "provided",
-    "commons-dbcp" % "commons-dbcp" % "1.4"
+    "commons-dbcp" % "commons-dbcp" % "1.4",
+    "org.codehaus.jackson" % "jackson-mapper-asl" % "1.8.5"
   )
 
   val main = play.Project(appName, appVersion, appDependencies).settings(
-    Keys.javaOptions in (Runtime) +=
-      "-javaagent:/Users/vim/.ivy2/cache/org.springframework/spring-instrument/jars/spring-instrument-3.2.2.RELEASE.jar"
+    // Keys.javaOptions in (Runtime) +=
+    //  "-javaagent:/Users/vim/.ivy2/cache/org.springframework/spring-instrument/jars/spring-instrument-3.2.2.RELEASE.jar"
     // Add your own project settings here
   )
 

@@ -83,11 +83,11 @@
     <bean id="uiViews" class="java.util.TreeMap">
         <constructor-arg>
             <map key-type="java.lang.String" value-type="java.lang.Class">
-                <entry key="dashboard" value="ui.views.DashboardView.class" />
-                <entry key="sales" value="ui.views.SalesView.class" />
-                <entry key="transactions" value="ui.views.TransactionsView.class" />
-                <entry key="reports" value="ui.views.ReportsView.class" />
-                <entry key="schedule" value="ui.views.ScheduleView.class" />
+                <entry key="dashboard" value="ui.views.DashboardView" />
+                <entry key="sales" value="ui.views.SalesView" />
+                <entry key="transactions" value="ui.views.TransactionsView" />
+                <entry key="reports" value="ui.views.ReportsView" />
+                <entry key="schedule" value="ui.views.ScheduleView" />
             </map>
         </constructor-arg>
     </bean>
