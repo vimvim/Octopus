@@ -9,10 +9,12 @@ import models.{Node, User}
 /**
  *
  */
-abstract class AbstractNodesRepo[T <: Node : ClassManifest] extends NodesRepo[T] {
+abstract class AbstractNodesRepo[T <: Node : ClassManifest](implicit m: Manifest[T]) extends NodesRepo[T] {
 
   @Autowired
   var entityManager: EntityManager = _
+
+  def entityClass = m.erasure.asInstanceOf[Class[T]]
 
   def save(user: T): Unit = user.id match {
     case 0 => entityManager.persist(user)
@@ -20,6 +22,8 @@ abstract class AbstractNodesRepo[T <: Node : ClassManifest] extends NodesRepo[T]
   }
 
   def find(id: Int): Option[T] = {
+    Option(entityManager.find(entityClass, id))
+
     // Option(entityManager.find(T, id))
     // Option(entityManager.find(classOf[T].getClass, id))
     // Option(entityManager.find(classOf[Class[T]], id))
@@ -28,8 +32,8 @@ abstract class AbstractNodesRepo[T <: Node : ClassManifest] extends NodesRepo[T]
 
     // Option(entityManager.find(classManifest[T].erasure, id))
 
-    val v = entityManager.find(classManifest[T].erasure, id);
-    cast[classManifest[T]](v)
+    // val v = entityManager.find(classManifest[T].erasure, id);
+    // cast[classManifest[T]](v)
   }
 
   // def getAll: List[T] = {

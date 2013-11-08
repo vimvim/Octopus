@@ -3,6 +3,6 @@ package models
 /**
  *
  */
-class Sentiment {
+class Sentiment extends Node {
 
 }

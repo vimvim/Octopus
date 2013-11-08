@@ -3,6 +3,6 @@ package models
 /**
  *
  */
-class Tweet {
+class Tweet extends Sentiment {
 
 }
