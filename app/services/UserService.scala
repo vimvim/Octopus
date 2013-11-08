@@ -1,8 +1,10 @@
 package services
 
+import models.User
+
 /**
  *
  */
-trait UserService {
+trait UserService extends NodeService[User] {
 
 }

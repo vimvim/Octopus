@@ -119,7 +119,7 @@ public class BackendUI extends UI  {
 
     @Subscribe
     public void onNavigateEvent(NavigateViewEvent navigateEvent) {
-        navigator.navigateTo("/"+navigateEvent.getRoute());
+        navigator.navigateTo(navigateEvent.getRoute());
     }
 
 }

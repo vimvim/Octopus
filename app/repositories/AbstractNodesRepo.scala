@@ -9,7 +9,7 @@ import models.{Node, User}
 /**
  *
  */
-abstract class AbstractNodesRepo[T <: Node : ClassManifest](implicit m: Manifest[T]) extends NodesRepo[T] {
+abstract class AbstractNodesRepo[T <: Node](implicit m: Manifest[T]) extends NodesRepo[T] {
 
   @Autowired
   var entityManager: EntityManager = _

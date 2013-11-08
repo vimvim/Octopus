@@ -1,10 +1,12 @@
 package services
 
 import models.{Node, Sentiment}
+import org.springframework.stereotype.Service
 
 /**
  *
  */
+@Service("sentimentService")
 class SentimentServiceImpl extends AbstractSentimentService[Sentiment] {
 
   def create(): Sentiment = {

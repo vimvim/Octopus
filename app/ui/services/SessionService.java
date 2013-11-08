@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Service;
 import repositories.UsersRepo;
+import services.UserService;
 import ui.events.LoggedInEvent;
 
 /**

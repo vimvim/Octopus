@@ -5,8 +5,12 @@ import com.vaadin.ui.Notification;
 import com.vaadin.ui.Upload;
 import org.codehaus.jackson.JsonNode;
 import org.codehaus.jackson.map.ObjectMapper;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
+import repositories.SocialUsersRepo;
+import services.SocialUserService;
 import services.TweetService;
 
 import java.io.*;
@@ -20,10 +24,20 @@ public class TopsyTweetsHandler implements Upload.Receiver, Upload.SucceededList
 
     TweetService tweetService;
 
+    SocialUserService socialUserService;
+
+    SocialUsersRepo socialUsersRepo;
+
     File file;
 
-    public TopsyTweetsHandler(TweetService tweetService) {
+    @Autowired
+    public TopsyTweetsHandler(
+            @Qualifier("tweetService") TweetService tweetService,
+            @Qualifier("socialUserService") SocialUserService socialUserService,
+            SocialUsersRepo socialUsersRepo,
+    ) {
         this.tweetService = tweetService;
+        this.socialUserService = socialUserService;
     }
 
     public OutputStream receiveUpload(String filename, String mimeType) {
@@ -50,11 +64,31 @@ public class TopsyTweetsHandler implements Upload.Receiver, Upload.SucceededList
         try {
 
             BufferedReader fileReader = new BufferedReader(new FileReader(file));
-            JsonNode rootNode = mapper.readTree(fileReader);
+
+            JsonNode rootNode;
+            while ((rootNode = mapper.readTree(fileReader))!=null) {
+
+                String id = rootNode.path("id_str").getTextValue();
+
+                String text = rootNode.path("text").getTextValue();
+
+                JsonNode entities = rootNode.path("entities");
+
+                JsonNode user = rootNode.path("user");
+                JsonNode topsy = rootNode.path("topsy");
+
+                String userID = user.path("id").getTextValue();
+                String screenName = user.path("screen_name").getTextValue();
+                String userName = user.path("name").getTextValue();
+
+                socialUsersRepo.findByAttribute("twitter", );
+
+                socialUserService.repo()
+            }
 
             /*** read value from key "name" ***/
-            JsonNode nameNode = rootNode.path("name");
-            System.out.println(nameNode.getTextValue());
+            // JsonNode nameNode = rootNode.path("name");
+            // System.out.println(nameNode.getTextValue());
 
         } catch (Exception ex) {
 
