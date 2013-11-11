@@ -8,7 +8,7 @@ import repositories.NodesRepo
  */
 trait NodeService[ T <: Node] {
 
-  def create(initializer:(T) => Unit):Node
+  def create(initializer:(T) => Unit):T
 
   def repo(): NodesRepo[T]
 

@@ -3,6 +3,8 @@ package ui.services;
 import com.vaadin.server.Page;
 import com.vaadin.ui.Notification;
 import com.vaadin.ui.Upload;
+import models.SocialUser;
+import models.Tweet;
 import org.codehaus.jackson.JsonNode;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,6 +12,10 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 import repositories.SocialUsersRepo;
+import repositories.TweetsRepo;
+import scala.Function1;
+import scala.runtime.AbstractFunction1;
+import scala.runtime.BoxedUnit;
 import services.SocialUserService;
 import services.TweetService;
 
@@ -24,6 +30,8 @@ public class TopsyTweetsHandler implements Upload.Receiver, Upload.SucceededList
 
     TweetService tweetService;
 
+    TweetsRepo tweetsRepo;
+
     SocialUserService socialUserService;
 
     SocialUsersRepo socialUsersRepo;
@@ -33,11 +41,14 @@ public class TopsyTweetsHandler implements Upload.Receiver, Upload.SucceededList
     @Autowired
     public TopsyTweetsHandler(
             @Qualifier("tweetService") TweetService tweetService,
+            @Qualifier("tweetsRepo") TweetsRepo tweetsRepo,
             @Qualifier("socialUserService") SocialUserService socialUserService,
-            SocialUsersRepo socialUsersRepo,
+            @Qualifier("socialUsersRepo") SocialUsersRepo socialUsersRepo
     ) {
         this.tweetService = tweetService;
+        this.tweetsRepo = tweetsRepo;
         this.socialUserService = socialUserService;
+        this.socialUsersRepo = socialUsersRepo;
     }
 
     public OutputStream receiveUpload(String filename, String mimeType) {
@@ -68,22 +79,53 @@ public class TopsyTweetsHandler implements Upload.Receiver, Upload.SucceededList
             JsonNode rootNode;
             while ((rootNode = mapper.readTree(fileReader))!=null) {
 
-                String id = rootNode.path("id_str").getTextValue();
-
-                String text = rootNode.path("text").getTextValue();
+                final String tweetId = rootNode.path("id_str").getTextValue();
+                final String tweetText = rootNode.path("text").getTextValue();
 
                 JsonNode entities = rootNode.path("entities");
 
                 JsonNode user = rootNode.path("user");
                 JsonNode topsy = rootNode.path("topsy");
 
-                String userID = user.path("id").getTextValue();
-                String screenName = user.path("screen_name").getTextValue();
-                String userName = user.path("name").getTextValue();
+                final String userID = user.path("id").getTextValue();
+                final String screenName = user.path("screen_name").getTextValue();
+                final String userName = user.path("name").getTextValue();
 
-                socialUsersRepo.findByAttribute("twitter", );
+                SocialUser _socialUser = socialUsersRepo.findBySchemaAttr("twitter", "id", userID);
+                // SocialUser socialUser = socialUsersRepo.findByAttribute("twitter", "screen_name");
+                if (_socialUser==null) {
 
-                socialUserService.repo()
+                    _socialUser = socialUserService.create(new AbstractFunction1<SocialUser,BoxedUnit>(){
+
+                         @Override
+                         public BoxedUnit apply(SocialUser socialUser) {
+
+                             socialUser.setAttribute("twitter", "id", userID);
+
+                            return null;
+                         }
+                    });
+                }
+
+                final SocialUser socialUser = _socialUser;
+
+                Tweet tweet = tweetsRepo.findByTweetId(tweetId);
+                if (tweet==null) {
+
+                    tweet = tweetService.create(new AbstractFunction1<Tweet, BoxedUnit>() {
+
+                        @Override
+                        public BoxedUnit apply(Tweet tweet) {
+
+                            tweet.setTweetId(tweetId);
+                            tweet.setText(tweetText);
+                            tweet.setSocialUser(socialUser);
+
+                            return null;
+                        }
+                    });
+                }
+
             }
 
             /*** read value from key "name" ***/

@@ -5,6 +5,11 @@ import javax.persistence.EntityManager
 import org.springframework.beans.factory.annotation.Autowired
 
 import models.{Node, User}
+import scala.reflect._
+import scala.Some
+import scala.Predef._
+import scala.Some
+import scala.reflect.Manifest
 
 /**
  *
@@ -40,7 +45,36 @@ abstract class AbstractNodesRepo[T <: Node](implicit m: Manifest[T]) extends Nod
   //  entityManager.createQuery("From User", classOf[T]).getResultList.toList
   // }
 
-  def cast[A : Manifest](value: Any): Option[A] = {
+  def findBySchemaAttr[VT: ClassTag](schemaName: String, attrName: String, value: VT): Option[T] = {
+
+    def find(schemaName: String, attrName: String, valueQuery: String, value: VT): Option[T] {
+
+
+
+    }
+
+    val nodeClassTag = classTag[Node]
+
+    implicitly[ClassTag[VT]] match {
+      case "string" => find(schemaName, attrName, "value_string=?")
+      case ClassTag.Int => "Int"
+      case ClassTag.Boolean => "Boolean"
+      case nodeClassTag =>
+      case _ => throw new Exception("Unexpected attribute value type")
+    }
+
+    entityManager.createQuery("SELECT attr.node FROM AttributeBool attr WHERE attr.name=? AND attr.value=? AND attr.schemaRef.name=?")
+
+    "SELECT "
+
+
+    entityManager.createNativeQuery("select node.id as id from node inner join attributes on node.id=attributes.node_id where attributes.value_string=? and attributes.name=? ")
+
+
+
+  }
+
+  private def cast[A : Manifest](value: Any): Option[A] = {
     val erasure = manifest[A] match {
       case Manifest.Byte => classOf[java.lang.Byte]
       case Manifest.Short => classOf[java.lang.Short]

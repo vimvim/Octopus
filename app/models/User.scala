@@ -9,11 +9,12 @@ import scala.reflect.BeanProperty
  * @param _username
  */
 @Entity
-@Table(name = "user")
+@Table(name = "users")
 @PrimaryKeyJoinColumn(name = "id", referencedColumnName = "id")
 class User(_username: String) extends Node {
 
   @BeanProperty
+  @Column("username")
   var username: String = _username
 
   def this() = this (null)

@@ -1,13 +1,20 @@
 package models
 
-import javax.persistence.{PrimaryKeyJoinColumn, Table, Entity}
+import scala.beans.BeanProperty
+
+import javax.persistence.{Column, PrimaryKeyJoinColumn, Table, Entity}
 
 /**
  *
  */
 @Entity
-@Table(name = "tweet")
+@Table(name = "tweets")
 @PrimaryKeyJoinColumn(name = "id", referencedColumnName = "id")
 class Tweet extends Sentiment {
+
+  @BeanProperty
+  @Column("tweet_id")
+  var tweetId: String = _
+
 
 }

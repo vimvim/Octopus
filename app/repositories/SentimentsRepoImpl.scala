@@ -1,12 +1,15 @@
 package repositories
 
+import org.springframework.stereotype.Repository
+import org.springframework.transaction.annotation.{Propagation, Transactional}
+
+import models.Sentiment
+
 /**
- * Created with IntelliJ IDEA.
- * User: vim
- * Date: 11/8/13
- * Time: 2:23 PM
- * To change this template use File | Settings | File Templates.
+ *
  */
-class SentimentsRepoImpl {
+@Repository("sentimentsRepo")
+@Transactional(readOnly = false, propagation = Propagation.REQUIRED)
+class SentimentsRepoImpl extends AbstractSentimentsRepo[Sentiment] {
 
 }
