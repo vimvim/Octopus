@@ -12,7 +12,7 @@ import scala.beans.BeanProperty
 class Sentiment extends Node {
 
   @BeanProperty
-  @Column("text")
+  @Column(name="text")
   var text: String =_
 
   @BeanProperty

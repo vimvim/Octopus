@@ -5,6 +5,6 @@ import models.Sentiment
 /**
  *
  */
-trait SentimentsRepo[T <: Sentiment] extends NodesRepo[Sentiment] {
+trait SentimentsRepo[T <: Sentiment] extends NodesRepo[T] {
 
 }

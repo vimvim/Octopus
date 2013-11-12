@@ -7,5 +7,5 @@ import models.Tweet
  */
 trait TweetsRepo extends SentimentsRepo[Tweet] {
 
-  def findByTweetId(tweetId: String): Option
+  def findByTweetId(tweetId: String): Option[Tweet]
 }

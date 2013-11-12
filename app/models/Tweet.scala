@@ -13,7 +13,7 @@ import javax.persistence.{Column, PrimaryKeyJoinColumn, Table, Entity}
 class Tweet extends Sentiment {
 
   @BeanProperty
-  @Column("tweet_id")
+  @Column(name="tweet_id")
   var tweetId: String = _
 
 

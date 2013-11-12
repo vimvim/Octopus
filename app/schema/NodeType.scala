@@ -11,7 +11,7 @@ class NodeType[T <: Node] {
 
   var name: String =_
 
-  var extend: Set[NodeType] =_
+  var extend: Set[NodeType[Node]] =_
 
   var applicableSchema: Set[SchemaDescriptor] =_
 

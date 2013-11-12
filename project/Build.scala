@@ -40,6 +40,8 @@ object ApplicationBuild extends Build {
 
   val appDependencies = Seq(
     javaCore,
+    javaJpa,
+    javaJdbc,
     jdbc,
     "mysql" % "mysql-connector-java" % "5.1.18",
     anorm,

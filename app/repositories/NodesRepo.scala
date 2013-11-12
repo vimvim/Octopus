@@ -1,5 +1,7 @@
 package repositories
 
+import scala.reflect.ClassTag
+
 import models.Node
 
 /**
@@ -11,6 +13,6 @@ trait NodesRepo[T <: Node] {
 
   def find(id: Int): Option[T]
 
-  def findBySchemaAttr[VT](schemaName: String, attrName: String, value: VT): Option[T]
+  def findOneBySchemaAttrValue[VT: ClassTag](schemaName: String, attrName: String, value: VT): Option[T]
 
 }

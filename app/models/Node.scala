@@ -6,6 +6,8 @@ import services.SchemaRefService
 import schema.{AttributeDescriptor, SchemaDescriptor, SchemasRegistry, NodeType}
 import java.util
 
+
+
 /**
  *
  */
@@ -26,14 +28,14 @@ abstract class Node {
 
   @BeanProperty
   @OneToMany(mappedBy = "node")
-  var attributes: java.util.List[Attribute] = new util.ArrayList[Attribute]()
+  var attributes: java.util.List[Attribute[_]] = new util.ArrayList[Attribute[_]]()
 
   @ManyToMany
   @JoinTable(name="applied_schemas")
   var appliedSchemas: java.util.Set[SchemaRef] = new java.util.LinkedHashSet[SchemaRef]()
 
   @Transient
-  var nodeType: NodeType =_
+  var nodeType: NodeType[Node] =_
 
   @Transient
   var schemaRefService: SchemaRefService =_
@@ -104,7 +106,7 @@ abstract class Node {
 
     if (!isSchemaApplied(schema)) appliedSchemas.add(schemaRef)
 
-    findAttribute(schemaRef, name) match {
+    findAttribute[T](schemaRef, name) match {
 
       case Some(attribute) => {
 
@@ -124,7 +126,7 @@ abstract class Node {
     }
   }
 
-  protected def findAttribute(schemaRef: SchemaRef, name: String): Option ={
+  protected def findAttribute[T](schemaRef: SchemaRef, name: String): Option[Attribute[T]] ={
 
     val itr = attributes.iterator()
 
@@ -132,14 +134,14 @@ abstract class Node {
 
       val attr = itr.next()
 
-      if (attr.getSchemaRef.equals(schemaRef) && attr.getName.equals(name)) return Some(attr)
+      if (attr.getSchemaRef.equals(schemaRef) && attr.getName.equals(name)) return Some(attr.asInstanceOf[Attribute[T]])
     }
 
     None
   }
 
   protected def addNewAttribute[T](descriptor: AttributeDescriptor[T], value: T) = {
-    attributes.add(descriptor.createAttribute(value).asInstanceOf[Attribute])
+    attributes.add(descriptor.createAttribute(value).asInstanceOf[Attribute[_]])
   }
 
   def beginEdit(schemasRegistry: SchemasRegistry, schemaService: SchemaRefService) = {
@@ -151,11 +153,11 @@ abstract class Node {
 
   }
 
-  def getNodeType: NodeType = {
+  def getNodeType: NodeType[Node] = {
     nodeType
   }
 
-  protected def setNodeType(nodeType: NodeType) = {
+  protected def setNodeType(nodeType: NodeType[Node]) = {
     this.nodeType = nodeType
   }
 

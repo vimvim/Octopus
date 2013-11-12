@@ -9,9 +9,9 @@ class SchemaDescriptor {
 
   var name: String =_
 
-  var descriptors: Map[String,AttributeDescriptor] =_
+  var descriptors: Map[String,AttributeDescriptor[Any]] =_
 
-  def getDescriptor[T](attrName: String):AttributeDescriptor[T] = {
+  def getDescriptor[T :Manifest](attrName: String):AttributeDescriptor[T] = {
 
     descriptors.get(attrName) match {
 
@@ -19,7 +19,7 @@ class SchemaDescriptor {
 
         if (!descriptor.isInstanceOf[AttributeDescriptor[T]]) {
 
-          throw new Exception("Invalid attribute type "+name+":"+attrName+" "+classOf[T])
+          throw new Exception("Invalid attribute type "+name+":"+attrName+" "+classManifest[T].erasure.getName)
         }
 
         descriptor.asInstanceOf[AttributeDescriptor[T]]

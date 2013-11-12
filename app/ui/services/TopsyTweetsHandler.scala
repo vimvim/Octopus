@@ -92,7 +92,7 @@ class TopsyTweetsHandler extends Upload.Receiver with Upload.SucceededListener {
         val screenName: String = user.path("screen_name").getTextValue
         val userName: String = user.path("name").getTextValue
 
-        socialUsersRepo.findBySchemaAttr("twitter", "id", userID) match {
+        socialUsersRepo.findOneBySchemaAttrValue("twitter", "id", userID) match {
 
           case Some(socialUser) => {
             addTweet(socialUser, tweetId, tweetText)

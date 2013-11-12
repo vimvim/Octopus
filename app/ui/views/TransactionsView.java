@@ -7,7 +7,6 @@ import com.vaadin.ui.Panel;
 import com.vaadin.ui.Upload;
 import com.vaadin.ui.VerticalLayout;
 import spring.SpringContextHolder;
-import ui.HelpManager;
 import ui.services.TopsyTweetsHandler;
 
 

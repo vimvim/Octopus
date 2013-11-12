@@ -14,12 +14,15 @@ import scala.reflect.Manifest
 /**
  *
  */
-abstract class AbstractNodesRepo[T <: Node](implicit m: Manifest[T]) extends NodesRepo[T] {
+// abstract class AbstractNodesRepo[T <: Node](implicit m: Manifest[T]) extends NodesRepo[T] {
+abstract class AbstractNodesRepo[T <: Node: Manifest](val entityClass: Class[T]) extends NodesRepo[T] {
 
   @Autowired
   var entityManager: EntityManager = _
 
-  def entityClass = m.erasure.asInstanceOf[Class[T]]
+  // def entityClass = m.erasure.asInstanceOf[Class[T]]
+
+  def this() = this(manifest[T].erasure.asInstanceOf[Class[T]])
 
   def save(user: T): Unit = user.id match {
     case 0 => entityManager.persist(user)
@@ -45,33 +48,33 @@ abstract class AbstractNodesRepo[T <: Node](implicit m: Manifest[T]) extends Nod
   //  entityManager.createQuery("From User", classOf[T]).getResultList.toList
   // }
 
-  def findBySchemaAttr[VT: ClassTag](schemaName: String, attrName: String, value: VT): Option[T] = {
+  def findOneBySchemaAttrValue[VT: ClassTag](schemaName: String, attrName: String, value: VT): Option[T] = {
 
-    def find(schemaName: String, attrName: String, valueQuery: String, value: VT): Option[T] {
+    def find(schemaName: String, attrName: String, attrType: String, value: VT): Option[T] = {
 
+      val query = entityManager.createQuery("SELECT attr.node FROM "+attrType+" attr WHERE attr.name=:attrName AND attr.value=:attrValue AND attr.schemaRef.name=:schemaName")
+      query.setParameter("schemaName", schemaName)
+      query.setParameter("attrName", attrName)
+      query.setParameter("attrValue", value)
 
-
+      val res = query.getResultList
+      if (res.size()>0) {
+        Some(res.get(0).asInstanceOf[T])
+      } else {
+        None
+      }
     }
 
-    val nodeClassTag = classTag[Node]
+    val NodeClassTag = classTag[Node]
+    val StringClassTag = classTag[String]
 
     implicitly[ClassTag[VT]] match {
-      case "string" => find(schemaName, attrName, "value_string=?")
-      case ClassTag.Int => "Int"
-      case ClassTag.Boolean => "Boolean"
-      case nodeClassTag =>
+      case StringClassTag => find(schemaName, attrName, "AttributeString", value)
+      case ClassTag.Int => find(schemaName, attrName, "AttributeInt", value)
+      case ClassTag.Boolean => find(schemaName, attrName, "AttributeBool", value)
+      case NodeClassTag => find(schemaName, attrName, "AttributeNode", value)
       case _ => throw new Exception("Unexpected attribute value type")
     }
-
-    entityManager.createQuery("SELECT attr.node FROM AttributeBool attr WHERE attr.name=? AND attr.value=? AND attr.schemaRef.name=?")
-
-    "SELECT "
-
-
-    entityManager.createNativeQuery("select node.id as id from node inner join attributes on node.id=attributes.node_id where attributes.value_string=? and attributes.name=? ")
-
-
-
   }
 
   private def cast[A : Manifest](value: Any): Option[A] = {

@@ -14,7 +14,7 @@ import scala.reflect.BeanProperty
 class User(_username: String) extends Node {
 
   @BeanProperty
-  @Column("username")
+  @Column(name="username")
   var username: String = _username
 
   def this() = this (null)

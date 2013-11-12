@@ -1,7 +1,9 @@
 package services
 
-import models.{Node, Tweet}
+import models.{User, Node, Tweet}
 import org.springframework.stereotype.Service
+import repositories.{TweetsRepo, UsersRepo, NodesRepo}
+import org.springframework.beans.factory.annotation.{Qualifier, Autowired}
 
 /**
  *
@@ -9,8 +11,11 @@ import org.springframework.stereotype.Service
 @Service("tweetService")
 class TweetServiceImpl extends AbstractSentimentService[Tweet] with TweetService {
 
-  def create(): Tweet = {
-    new Tweet
-  }
+  @Autowired
+  @Qualifier("tweetsRepo")
+  var _repo: TweetsRepo = _
 
+  def repo(): NodesRepo[Tweet] = _repo
+
+  def create(initializer: (Tweet) => Unit): Tweet = new Tweet()
 }
