@@ -10,11 +10,6 @@ import spring.SpringContextHolder
 object Global extends GlobalSettings with VaadinSupport {
 
   /**
-  * Declare the application context to be used.
-  */
-  val ctx = new ClassPathXmlApplicationContext("applicationContext.xml")
-
-  /**
   * Sync the context lifecycle with Play's.
   * @param app
   */
@@ -49,6 +44,6 @@ object Global extends GlobalSettings with VaadinSupport {
   * @param A
   * @return
   */
-  override def getControllerInstance[A](controllerClass: Class[A]): A = ctx.getBean(controllerClass)
+  override def getControllerInstance[A](controllerClass: Class[A]): A = SpringContextHolder.getContext.getBean(controllerClass)
 
 }
