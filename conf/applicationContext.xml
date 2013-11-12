@@ -18,7 +18,7 @@
     <!-- <context:spring-configured/>  -->
     <!-- <context:load-time-weaver/>   -->
 
-    <context:component-scan base-package="controllers, services, repositories, models, ui" />
+    <context:component-scan base-package="controllers, services, repositories, models, ui, schema" />
 
     <!--<tx:annotation-driven mode="proxy"/> -->
     <tx:annotation-driven transaction-manager="transactionManager"/>
@@ -90,6 +90,20 @@
                 <entry key="schedule" value="ui.views.ScheduleView" />
             </map>
         </constructor-arg>
+    </bean>
+
+    <bean id="schemasRegistry" class="schema.SchemasRegistry">
+        <property name="schemas">
+            <list>
+                <bean id="schema.UserTwitter" class="schema.SchemaDescriptor" p:name="twitter.user">
+                    <property name="descriptors">
+                        <list>
+                            <bean class="schema.AttributeDescriptorString" p:name="id" />
+                        </list>
+                    </property>
+                </bean>
+            </list>
+        </property>
     </bean>
 
     <!--

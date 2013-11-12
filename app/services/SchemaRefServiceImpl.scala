@@ -4,10 +4,12 @@ import schema.SchemaDescriptor
 import models.SchemaRef
 import org.springframework.beans.factory.annotation.Autowired
 import repositories.{SchemaRefsRepo, TweetsRepo}
+import org.springframework.stereotype.Service
 
 /**
  *
  */
+@Service("schemaRefService")
 class SchemaRefServiceImpl extends SchemaRefService {
 
   @Autowired

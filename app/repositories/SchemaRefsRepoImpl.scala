@@ -3,10 +3,14 @@ package repositories
 import models.SchemaRef
 import org.springframework.beans.factory.annotation.Autowired
 import javax.persistence.EntityManager
+import org.springframework.stereotype.Repository
+import org.springframework.transaction.annotation.{Propagation, Transactional}
 
 /**
  *
  */
+@Repository("schemaRefsRepo")
+@Transactional(readOnly = false, propagation = Propagation.REQUIRED)
 class SchemaRefsRepoImpl extends SchemaRefsRepo {
 
   @Autowired

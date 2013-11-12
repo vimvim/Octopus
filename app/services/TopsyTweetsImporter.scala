@@ -58,7 +58,7 @@ class TopsyTweetsImporter {
         val screenName: String = user.path("screen_name").getTextValue
         val userName: String = user.path("name").getTextValue
 
-        socialUsersRepo.findOneBySchemaAttrValue("twitter", "id", userID) match {
+        socialUsersRepo.findOneBySchemaAttrValue("twitter.user", "id", userID) match {
 
           case Some(socialUser) => {
             addTweet(socialUser, tweetId, tweetText)
@@ -70,9 +70,9 @@ class TopsyTweetsImporter {
 
                 socialUser.setName(userName)
 
-                socialUser.setAttribute("twitter", "id", userID)
-                socialUser.setAttribute("twitter", "screen_name", screenName)
-                socialUser.setAttribute("twitter", "name", userName)
+                socialUser.setAttribute("twitter.user", "id", userID)
+                socialUser.setAttribute("twitter.user", "screen_name", screenName)
+                socialUser.setAttribute("twitter.user", "name", userName)
               }),
               tweetId, tweetText
             )

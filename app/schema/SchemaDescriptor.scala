@@ -1,15 +1,21 @@
 package schema
 
 import models.Attribute
+import scala.beans.BeanProperty
 
 /**
  *
  */
 class SchemaDescriptor {
 
+  @BeanProperty
   var name: String =_
 
-  var descriptors: Map[String,AttributeDescriptor[Any]] =_
+  var descriptors: Map[String,AttributeDescriptor[Any]] = Map()
+
+  def setDescriptors(descriptors: List[AttributeDescriptor[_]]) = {
+
+  }
 
   def getDescriptor[T :Manifest](attrName: String):AttributeDescriptor[T] = {
 

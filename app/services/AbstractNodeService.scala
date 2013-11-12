@@ -15,7 +15,7 @@ abstract class AbstractNodeService[T <:Node] extends NodeService[T] {
   var schemasRegistry: SchemasRegistry = _
 
   @Autowired
-  @Qualifier("schemaService")
+  @Qualifier("schemaRefService")
   var schemaRefService: SchemaRefService = _
 
   def create(initializer:(T) => Unit): T = {
