@@ -44,11 +44,12 @@ class TopsyTweetsImporter {
       val fileReader: BufferedReader = new BufferedReader(new FileReader(file))
       var rootNode: JsonNode = null
 
-      while ( {
+      var line: String = fileReader.readLine()
+
+      while (line!= null) {
+
         val mapper: ObjectMapper = new ObjectMapper
-        rootNode = mapper.readTree(fileReader)
-        rootNode
-      } != null) {
+        rootNode = mapper.readTree(line)
 
         val tweetId: String = rootNode.path("id_str").getTextValue
         val tweetText: String = rootNode.path("text").getTextValue
@@ -81,6 +82,8 @@ class TopsyTweetsImporter {
             )
           }
         }
+
+        line = fileReader.readLine()
       }
     } catch {
       case ex: Exception => {
