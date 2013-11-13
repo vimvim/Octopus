@@ -8,11 +8,11 @@ import scala.beans.BeanProperty
  */
 @Entity
 @DiscriminatorValue("INT")
-class AttributeInt(_value: Int) extends Attribute[Int] {
+class AttributeInt extends Attribute[Int] {
 
   @BeanProperty
   @Column(name="value_int")
-  var value: Int = _value
+  var value: Int = _
 
   def applyValue(value: Int) = this.value = value
 

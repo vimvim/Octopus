@@ -18,6 +18,7 @@ abstract class Attribute[T] {
   @Column(name="id")
   var id: Int = _
 
+  @BeanProperty
   @ManyToOne(fetch=FetchType.LAZY)
   @JoinColumn(name="node_id")
   var node: Node =_

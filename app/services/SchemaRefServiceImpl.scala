@@ -5,11 +5,13 @@ import models.SchemaRef
 import org.springframework.beans.factory.annotation.Autowired
 import repositories.{SchemaRefsRepo, TweetsRepo}
 import org.springframework.stereotype.Service
+import org.springframework.transaction.annotation.{Propagation, Transactional}
 
 /**
  *
  */
 @Service("schemaRefService")
+@Transactional(readOnly = false, propagation = Propagation.REQUIRED)
 class SchemaRefServiceImpl extends SchemaRefService {
 
   @Autowired

@@ -7,11 +7,13 @@ import java.io.{FileReader, BufferedReader, File}
 import org.codehaus.jackson.map.ObjectMapper
 import org.codehaus.jackson.JsonNode
 import models.{Tweet, SocialUser}
+import org.springframework.transaction.annotation.{Propagation, Transactional}
 
 /**
  *
  */
 @Component("topsyTweetsImporter")
+@Transactional(readOnly = false, propagation = Propagation.REQUIRED)
 class TopsyTweetsImporter {
 
   var tweetService: TweetService = null
@@ -35,7 +37,7 @@ class TopsyTweetsImporter {
 
   def loadTweets(file: File) {
 
-    val mapper: ObjectMapper = new ObjectMapper
+    // val mapper: ObjectMapper = new ObjectMapper
 
     try {
 
@@ -43,6 +45,7 @@ class TopsyTweetsImporter {
       var rootNode: JsonNode = null
 
       while ( {
+        val mapper: ObjectMapper = new ObjectMapper
         rootNode = mapper.readTree(fileReader)
         rootNode
       } != null) {
@@ -54,7 +57,7 @@ class TopsyTweetsImporter {
         val user: JsonNode = rootNode.path("user")
         val topsy: JsonNode = rootNode.path("topsy")
 
-        val userID: String = user.path("id").getTextValue
+        val userID = user.path("id").getIntValue
         val screenName: String = user.path("screen_name").getTextValue
         val userName: String = user.path("name").getTextValue
 
@@ -81,6 +84,7 @@ class TopsyTweetsImporter {
       }
     } catch {
       case ex: Exception => {
+        ex.printStackTrace()
       }
     }
   }

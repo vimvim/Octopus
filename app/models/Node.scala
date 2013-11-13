@@ -27,7 +27,7 @@ abstract class Node {
   var name: String = _
 
   @BeanProperty
-  @OneToMany(mappedBy = "node")
+  @OneToMany(mappedBy = "node", cascade = Array(CascadeType.ALL))
   var attributes: java.util.List[Attribute[_]] = new util.ArrayList[Attribute[_]]()
 
   @ManyToMany
@@ -112,7 +112,7 @@ abstract class Node {
 
         if (descriptor.multiValue) {
 
-          addNewAttribute[T](descriptor.asInstanceOf[AttributeDescriptor[T]], value)
+          addNewAttribute[T](schemaRef, descriptor.asInstanceOf[AttributeDescriptor[T]], value)
         } else {
 
           attribute.asInstanceOf[Attribute[T]].applyValue(value)
@@ -121,7 +121,7 @@ abstract class Node {
 
       case None => {
 
-        addNewAttribute[T](descriptor.asInstanceOf[AttributeDescriptor[T]], value)
+        addNewAttribute[T](schemaRef, descriptor.asInstanceOf[AttributeDescriptor[T]], value)
       }
     }
   }
@@ -140,8 +140,14 @@ abstract class Node {
     None
   }
 
-  protected def addNewAttribute[T](descriptor: AttributeDescriptor[T], value: T) = {
-    attributes.add(descriptor.createAttribute(value).asInstanceOf[Attribute[_]])
+  protected def addNewAttribute[T](schemaRef:SchemaRef, descriptor: AttributeDescriptor[T], value: T) = {
+
+    val attribute = descriptor.createAttribute(value)
+    attribute.setName(descriptor.name)
+    attribute.setSchemaRef(schemaRef)
+    attribute.setNode(this)
+
+    attributes.add(attribute.asInstanceOf[Attribute[_]])
   }
 
   def beginEdit(schemasRegistry: SchemasRegistry, schemaService: SchemaRefService) = {

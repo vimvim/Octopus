@@ -12,8 +12,16 @@ class SchemasRegistry {
 
   var schemas: Map[String,SchemaDescriptor] = Map()
 
-  def setSchemas(map: java.util.List[SchemaDescriptor]) = {
+  def setSchemas(schemasDescriptors: java.util.List[SchemaDescriptor]) = {
 
+    val itr = schemasDescriptors.iterator()
+
+    while (itr.hasNext) {
+
+      val schemaDescriptor = itr.next()
+
+      schemas = schemas + Pair(schemaDescriptor.getName, schemaDescriptor)
+    }
   }
 
   def getSchema(schemaName: String): SchemaDescriptor = {

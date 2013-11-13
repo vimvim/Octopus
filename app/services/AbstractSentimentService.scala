@@ -5,6 +5,6 @@ import models.Sentiment
 /**
  *
  */
-abstract class AbstractSentimentService[ T<: Sentiment ] extends SentimentService[T] {
+abstract class AbstractSentimentService[ T<: Sentiment ] extends AbstractNodeService[T] with SentimentService[T] {
 
 }

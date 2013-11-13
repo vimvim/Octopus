@@ -14,6 +14,14 @@ abstract class AttributeDescriptor[T] {
   @BeanProperty
   var multiValue: Boolean = false
 
-  def createAttribute(value: T): Attribute[T]
+  def createAttribute(value: T): Attribute[T] = {
+
+    val attribute = createAttributeEntity()
+    attribute.applyValue(value)
+
+    attribute
+  }
+
+  protected def createAttributeEntity(): Attribute[T]
 
 }

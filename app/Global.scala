@@ -32,7 +32,11 @@ object Global extends GlobalSettings with VaadinSupport {
   */
   override def onStop(app: Application) {
 
-    SpringContextHolder.getContext.stop()
+    try {
+      SpringContextHolder.getContext.stop()
+    } catch {
+      case e:Exception =>
+    }
 
     super.onStop(app)
   }

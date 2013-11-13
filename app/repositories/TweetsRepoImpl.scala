@@ -15,6 +15,7 @@ class TweetsRepoImpl extends AbstractSentimentsRepo[Tweet] with TweetsRepo {
   def findByTweetId(tweetId: String): Option[Tweet] = {
 
     val query = entityManager.createQuery("SELECT tweet FROM Tweet tweet WHERE tweet.tweetId=:tweetId")
+    query.setParameter("tweetId", tweetId)
 
     val res = query.getResultList
 

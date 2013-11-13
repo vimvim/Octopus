@@ -8,12 +8,12 @@ import scala.beans.BeanProperty
  */
 @Entity
 @DiscriminatorValue("NODE")
-class AttributeNode(_value: Node) extends Attribute[Node] {
+class AttributeNode extends Attribute[Node] {
 
   @BeanProperty
   @ManyToOne(fetch=FetchType.LAZY)
   @JoinColumn(name="value_node_id")
-  var value: Node = _value
+  var value: Node = _
 
   def applyValue(value: Node) = this.value = value
 }

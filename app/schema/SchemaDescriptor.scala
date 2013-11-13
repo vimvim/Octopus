@@ -13,8 +13,16 @@ class SchemaDescriptor {
 
   var descriptors: Map[String,AttributeDescriptor[Any]] = Map()
 
-  def setDescriptors(descriptors: List[AttributeDescriptor[_]]) = {
+  def setDescriptors(descriptors: java.util.List[AttributeDescriptor[Any]]) = {
 
+    val itr = descriptors.iterator()
+
+    while (itr.hasNext) {
+
+      val descriptor = itr.next()
+
+      this.descriptors = this.descriptors + Pair(descriptor.name, descriptor)
+    }
   }
 
   def getDescriptor[T :Manifest](attrName: String):AttributeDescriptor[T] = {

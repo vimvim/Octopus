@@ -98,7 +98,9 @@
                 <bean id="schema.UserTwitter" class="schema.SchemaDescriptor" p:name="twitter.user">
                     <property name="descriptors">
                         <list>
-                            <bean class="schema.AttributeDescriptorString" p:name="id" />
+                            <bean class="schema.AttributeDescriptorInt" p:name="id" />
+                            <bean class="schema.AttributeDescriptorString" p:name="screen_name" />
+                            <bean class="schema.AttributeDescriptorString" p:name="name" />
                         </list>
                     </property>
                 </bean>

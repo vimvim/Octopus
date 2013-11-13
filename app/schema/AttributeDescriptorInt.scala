@@ -7,8 +7,6 @@ import models.AttributeInt
  */
 class AttributeDescriptorInt  extends AttributeDescriptor[Int] {
 
-  def createAttribute(value: Int) = {
-    new AttributeInt(value)
-  }
+  def createAttributeEntity() = new AttributeInt()
 
 }

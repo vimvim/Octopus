@@ -8,11 +8,11 @@ import scala.beans.BeanProperty
  */
 @Entity
 @DiscriminatorValue("BOOL")
-class AttributeBool(_value: Boolean) extends Attribute[Boolean] {
+class AttributeBool extends Attribute[Boolean] {
 
   @BeanProperty
   @Column(name="value_bool")
-  var value: Boolean = _value
+  var value: Boolean = _
 
   def applyValue(value: Boolean) = this.value = value
 }

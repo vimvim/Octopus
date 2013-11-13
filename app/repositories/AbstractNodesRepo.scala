@@ -2,9 +2,9 @@ package repositories
 
 import javax.persistence.EntityManager
 
-import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.beans.factory.annotation.{Qualifier, Autowired}
 
-import models.{Node, User}
+import models.{SchemaRef, Attribute, Node, User}
 import scala.reflect._
 import scala.Some
 import scala.Predef._
@@ -16,6 +16,10 @@ import scala.reflect.Manifest
  */
 // abstract class AbstractNodesRepo[T <: Node](implicit m: Manifest[T]) extends NodesRepo[T] {
 abstract class AbstractNodesRepo[T <: Node: Manifest](val entityClass: Class[T]) extends NodesRepo[T] {
+
+  @Autowired
+  @Qualifier("schemaRefsRepo")
+  var schemaResRepo: SchemaRefsRepo = _
 
   @Autowired
   var entityManager: EntityManager = _
@@ -50,30 +54,50 @@ abstract class AbstractNodesRepo[T <: Node: Manifest](val entityClass: Class[T])
 
   def findOneBySchemaAttrValue[VT: ClassTag](schemaName: String, attrName: String, value: VT): Option[T] = {
 
-    def find(schemaName: String, attrName: String, attrType: String, value: VT): Option[T] = {
+    def find(schemaRef: SchemaRef, attrName: String, attrType: String, value: VT): Option[T] = {
 
-      val query = entityManager.createQuery("SELECT attr.node FROM "+attrType+" attr WHERE attr.name=:attrName AND attr.value=:attrValue AND attr.schemaRef.name=:schemaName")
-      query.setParameter("schemaName", schemaName)
+      val query = entityManager.createQuery("SELECT attr FROM "+attrType+" attr WHERE attr.name=:attrName AND attr.value=:attrValue AND attr.schemaRef=:schemaRef")
+      query.setParameter("schemaRef", schemaRef)
       query.setParameter("attrName", attrName)
       query.setParameter("attrValue", value)
 
       val res = query.getResultList
       if (res.size()>0) {
-        Some(res.get(0).asInstanceOf[T])
+
+        val attr = res.get(0).asInstanceOf[Attribute[VT]]
+        val node = attr.node
+
+        this.find(node.id)
+        /*
+
+        if (node.isInstanceOf[T]) {
+          Some(attr.node.asInstanceOf[T])
+        } else {
+          None
+        }
+        */
       } else {
         None
       }
     }
 
-    val NodeClassTag = classTag[Node]
-    val StringClassTag = classTag[String]
+    schemaResRepo.findByName(schemaName) match {
 
-    implicitly[ClassTag[VT]] match {
-      case StringClassTag => find(schemaName, attrName, "AttributeString", value)
-      case ClassTag.Int => find(schemaName, attrName, "AttributeInt", value)
-      case ClassTag.Boolean => find(schemaName, attrName, "AttributeBool", value)
-      case NodeClassTag => find(schemaName, attrName, "AttributeNode", value)
-      case _ => throw new Exception("Unexpected attribute value type")
+      case Some(schemaRef) => {
+
+        val NodeClassTag = classTag[Node]
+        val StringClassTag = classTag[String]
+
+        implicitly[ClassTag[VT]] match {
+          case StringClassTag => find(schemaRef, attrName, "AttributeString", value)
+          case ClassTag.Int => find(schemaRef, attrName, "AttributeInt", value)
+          case ClassTag.Boolean => find(schemaRef, attrName, "AttributeBool", value)
+          case NodeClassTag => find(schemaRef, attrName, "AttributeNode", value)
+          case _ => throw new Exception("Unexpected attribute value type")
+        }
+      }
+
+      case None => None
     }
   }
 

@@ -24,6 +24,8 @@ class SchemaRefsRepoImpl extends SchemaRefsRepo {
   def findByName(schemaName: String): Option[SchemaRef] = {
 
     val query = entityManager.createQuery("SELECT schemaRef FROM SchemaRef schemaRef WHERE schemaRef.name=:schemaName")
+    query.setParameter("schemaName", schemaName)
+
     val res = query.getResultList
     if (res.size()>0) {
       Some(res.get(0).asInstanceOf[SchemaRef])
