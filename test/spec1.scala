@@ -1,9 +1,9 @@
 
+import actors.TopsyTweetsParser
 import java.io.File
 import play.api.test.{FakeApplication, WithApplication, PlaySpecification}
 import play.api.test.Helpers._
 import org.specs2.mutable._
-import services.TopsyTweetsImporter
 import spring.SpringContextHolder
 
 
@@ -27,7 +27,7 @@ class spec1 extends Specification {
 
       val file= new File("/home/vim/Dropbox/Projects/sentiment/tweets_airines_1.json")
 
-      val tweetsHandler = SpringContextHolder.getContext.getBean(classOf[TopsyTweetsImporter])
+      val tweetsHandler = SpringContextHolder.getContext.getBean(classOf[TopsyTweetsParser])
       tweetsHandler.loadTweets(file)
 
       println("1")
@@ -40,7 +40,7 @@ class spec1 extends Specification {
 
         val file= new File("/home/vim/Dropbox/Projects/sentiment/tweets_airines_1.json")
 
-        val tweetsHandler = SpringContextHolder.getContext.getBean(classOf[TopsyTweetsImporter])
+        val tweetsHandler = SpringContextHolder.getContext.getBean(classOf[TopsyTweetsParser])
         tweetsHandler.loadTweets(file)
 
         println("3")

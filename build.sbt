@@ -4,6 +4,11 @@ version := "1.0-SNAPSHOT"
 
 resolvers += "play-vaadin-integration Snapshots" at "http://henrikerola.github.io/repository/snapshots/"
 
+resolvers ++= Seq(
+  "release-springsource" at "http://repo.springsource.org/release/",
+  "milestone-springframework" at "http://maven.springframework.org/milestone/"
+)
+
 libraryDependencies ++= Seq(
   "com.vaadin" % "vaadin-server" % "7.1.6",
   "com.vaadin" % "vaadin-client-compiled" % "7.1.6",

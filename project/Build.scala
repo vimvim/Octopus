@@ -51,6 +51,7 @@ object ApplicationBuild extends Build {
     "org.springframework" % "spring-beans" % "3.2.4.RELEASE",
     "org.springframework" % "spring-aspects" % "3.2.4.RELEASE",
     "org.springframework.data" % "spring-data-jpa" % "1.4.2.RELEASE",
+    "org.springframework.scala" % "spring-scala" % "1.0.0.M2",
     "org.hibernate" % "hibernate-core" % "4.2.7.SP1" ,
     "org.hibernate" % "hibernate-entitymanager" % "4.2.7.SP1" ,
     "org.hibernate" % "hibernate-c3p0" % "4.2.7.SP1" ,

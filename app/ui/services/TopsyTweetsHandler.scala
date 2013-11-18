@@ -16,8 +16,12 @@ import repositories.TweetsRepo
 import scala.Function1
 import scala.runtime.AbstractFunction1
 import scala.runtime.BoxedUnit
-import services.{TopsyTweetsImporter, SocialUserService, TweetService}
+import services.{SocialUserService, TweetService}
 import java.io._
+import actors.{FileBatchLoad, FileBatchLoader, TopsyTweetsParser}
+import akka.actor.{ActorRef, Props}
+import play.libs.Akka
+import spring.SpringActorProducer
 
 /**
  * Handle tweets uploaded in the JSOn from from topsy service.
@@ -26,9 +30,13 @@ import java.io._
 @Scope("session")
 class TopsyTweetsHandler extends Upload.Receiver with Upload.SucceededListener {
 
+  // @Autowired
+  // @Qualifier("topsyTweetsImporter")
+  // var tweetsImporter: TopsyTweetsParser =_
+
   @Autowired
-  @Qualifier("topsyTweetsImporter")
-  var tweetsImporter: TopsyTweetsImporter =_
+  @Qualifier("fileBatchLoader")
+  var loader: ActorRef =_
 
   var file: File = null
 
@@ -54,14 +62,20 @@ class TopsyTweetsHandler extends Upload.Receiver with Upload.SucceededListener {
 
   def uploadSucceeded(event: Upload.SucceededEvent) {
 
-    try {
+    // val loader = Akka.system.actorOf(Props.apply(Class[SpringActorProducer], Class[FileBatchLoader]))
+    loader ! FileBatchLoad(file.getAbsolutePath, "topsyTweetsParser")
 
-      tweetsImporter.loadTweets(file)
-    } catch {
 
-      case e: Exception => {
-        new Notification("Could not import file", e.getMessage, Notification.Type.ERROR_MESSAGE).show(Page.getCurrent)
-      }
-    }
+    // Akka.system.actorOf(Props.create(SpringActorProducer.class, TopsyTweetsLoader.class, "myActor"))
+
+    // try {
+
+    //  tweetsImporter.loadTweets(file)
+    //} catch {
+
+    //  case e: Exception => {
+    //    new Notification("Could not import file", e.getMessage, Notification.Type.ERROR_MESSAGE).show(Page.getCurrent)
+    //  }
+    // }
   }
 }
