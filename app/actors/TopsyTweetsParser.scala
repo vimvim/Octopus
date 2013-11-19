@@ -1,16 +1,20 @@
 package actors
 
+import java.io.{FileReader, BufferedReader, File}
+
 import org.springframework.stereotype.Component
 import org.springframework.beans.factory.annotation.{Qualifier, Autowired}
-import repositories.{SocialUsersRepo, TweetsRepo}
-import java.io.{FileReader, BufferedReader, File}
+import org.springframework.context.annotation.Lazy
+import org.springframework.transaction.annotation.{Propagation, Transactional}
+
+import akka.actor.Actor
+
 import org.codehaus.jackson.map.ObjectMapper
 import org.codehaus.jackson.JsonNode
-import models.{Tweet, SocialUser}
-import org.springframework.transaction.annotation.{Propagation, Transactional}
+
 import services.{SocialUserService, TweetService}
-import akka.actor.Actor
-import org.springframework.context.annotation.Lazy
+import repositories.{SocialUsersRepo, TweetsRepo}
+import models.{Tweet, SocialUser}
 
 /**
  *
