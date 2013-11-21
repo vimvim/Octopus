@@ -1,5 +1,7 @@
 package repositories
 
+import scala.collection.JavaConverters._
+
 import javax.persistence.EntityManager
 
 import org.springframework.beans.factory.annotation.{Qualifier, Autowired}
@@ -31,6 +33,29 @@ abstract class AbstractNodesRepo[T <: Node: Manifest](val entityClass: Class[T])
   def save(user: T): Unit = user.id match {
     case 0 => entityManager.persist(user)
     case _ => entityManager.merge(user)
+  }
+
+  def fetch(offset:Int, limit:Int):List[T] = {
+
+    val entityName = entityClass.getSimpleName
+
+    val query = entityManager.createQuery("SELECT COUNT(*) FROM "+entityName)
+    query.setFirstResult(offset)
+    query.setMaxResults(limit)
+
+    val res = query.getResultList
+
+    res.asScala.asInstanceOf[List[T]]
+  }
+
+  def totalCount: Int = {
+
+    val entityName = entityClass.getSimpleName
+
+    val query = entityManager.createQuery("SELECT COUNT(*) FROM "+entityName)
+
+    val res = query.getSingleResult
+    res.asInstanceOf[Int]
   }
 
   def find(id: Int): Option[T] = {

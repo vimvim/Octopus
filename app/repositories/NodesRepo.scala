@@ -15,4 +15,8 @@ trait NodesRepo[T <: Node] {
 
   def findOneBySchemaAttrValue[VT: ClassTag](schemaName: String, attrName: String, value: VT): Option[T]
 
+  def fetch(offset:Int, limit:Int):List[T]
+
+  def totalCount: Int
+
 }

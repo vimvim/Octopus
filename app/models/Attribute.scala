@@ -43,4 +43,6 @@ abstract class Attribute[T] {
   var name: String = _
 
   def applyValue(value: T)
+
+  def getValue:T
 }

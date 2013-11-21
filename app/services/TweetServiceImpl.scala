@@ -18,10 +18,6 @@ class TweetServiceImpl extends AbstractSentimentService[Tweet] with TweetService
   var _repo: TweetsRepo = _
 
   @Autowired
-  @Qualifier("tweetsRepo")
-  var tweetsRepo: TweetsRepo =_
-
-  @Autowired
   @Qualifier("socialUserService")
   var socialUserService: SocialUserService =_
 
@@ -59,7 +55,7 @@ class TweetServiceImpl extends AbstractSentimentService[Tweet] with TweetService
 
   def createTweet(socialUser: SocialUser, tweetId: String, tweetText: String) {
 
-    tweetsRepo.findByTweetId(tweetId) match {
+    _repo.findByTweetId(tweetId) match {
 
       case Some(tweet) =>
       case None => create((tweet: Tweet) => {

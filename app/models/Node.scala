@@ -43,7 +43,19 @@ abstract class Node {
   @Transient
   var schemasRegistry: SchemasRegistry =_
 
-  
+  def beginEdit(schemasRegistry: SchemasRegistry, schemaService: SchemaRefService) = {
+    this.schemasRegistry = schemasRegistry
+    this.schemaRefService = schemaService
+  }
+
+  def endEdit() = {
+
+  }
+
+  def getNodeType: NodeType[Node] = {
+    nodeType
+  }
+
   def applySchema(schemaName: String) ={
 
     val schema = schemasRegistry.getSchema(schemaName)
@@ -126,6 +138,40 @@ abstract class Node {
     }
   }
 
+  def attr[T](schemaName: String, name: String):Option[T] = {
+
+    val schema = schemasRegistry.getSchema(schemaName)
+    val descriptor = schema.getDescriptor(name)
+    val schemaRef = schemaRefService.getRef(schema)
+
+    if (!isSchemaApplied(schema)) {
+
+      None
+    } else {
+
+      findAttribute[T](schemaRef, name) match {
+
+        case Some(attribute) => {
+
+          if (descriptor.multiValue) {
+
+            // TODO: Implement return multi-value
+            None
+            // Some(attribute.getValues.get(0))
+          } else {
+
+            Some(attribute.getValue)
+          }
+        }
+
+        case None => {
+
+          None
+        }
+      }
+    }
+  }
+
   protected def findAttribute[T](schemaRef: SchemaRef, name: String): Option[Attribute[T]] ={
 
     val itr = attributes.iterator()
@@ -148,19 +194,6 @@ abstract class Node {
     attribute.setNode(this)
 
     attributes.add(attribute.asInstanceOf[Attribute[_]])
-  }
-
-  def beginEdit(schemasRegistry: SchemasRegistry, schemaService: SchemaRefService) = {
-    this.schemasRegistry = schemasRegistry
-    this.schemaRefService = schemaService
-  }
-
-  def endEdit() = {
-
-  }
-
-  def getNodeType: NodeType[Node] = {
-    nodeType
   }
 
   protected def setNodeType(nodeType: NodeType[Node]) = {

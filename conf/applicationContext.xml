@@ -110,12 +110,19 @@
         </property>
     </bean>
 
-    <!--
-    <bean id="uiNavigator" class="com.vaadin.navigator.Navigator">
-        <constructor-arg><ref bean="ui"/></constructor-arg>
-        <constructor-arg><ref bean="uiContentContainer"/></constructor-arg>
+    <bean id="presenter.tweets.full" class="viewmodels.TweetsFullPresenter">
+        <constructor-arg>
+            <bean id="tweetsRepo" />
+        </constructor-arg>
     </bean>
-    -->
+
+    <bean id="presenter.tweets.short" class="viewmodels.TweetsShortPresenter">
+        <constructor-arg>
+            <bean id="tweetsRepo" />
+        </constructor-arg>
+    </bean>
+
+
 
     <bean class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer"/>
 
