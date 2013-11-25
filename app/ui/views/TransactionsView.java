@@ -55,9 +55,6 @@ public class TransactionsView extends VerticalLayout implements View {
         panel.setContent(panelContent);
 
         addComponent(panel);
-
-
-
     }
 
     private EntityManager getEntityManager() {

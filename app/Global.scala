@@ -46,8 +46,8 @@ object Global extends GlobalSettings with VaadinSupport {
   */
   override def getControllerInstance[A](controllerClass: Class[A]): A = {
 
-    // val instance = SpringContextHolder.getContext.getBean(controllerClass)
-    val instance = SpringContextHolder.getContext.getBean("controller.Tweets")
+    val instance = SpringContextHolder.getContext.getBean(controllerClass)
+    // val instance = SpringContextHolder.getContext.getBean("controller.Tweets")
     instance.asInstanceOf[A]
   }
 

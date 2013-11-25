@@ -11,14 +11,15 @@ import repositories.TweetsRepo
 /**
  *
  */
-@org.springframework.stereotype.Controller("controller.Tweets")
+@org.springframework.stereotype.Controller
 class Tweets extends Controller  {
 
   /**
    * List of the tweets
    * @return
    */
-  @Transactional(readOnly = true, propagation = Propagation.REQUIRED)
+
+  @play.db.jpa.Transactional
   def index = Action {
 
     // This is for testing only
