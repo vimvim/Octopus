@@ -18,7 +18,7 @@
     <!-- <context:spring-configured/>  -->
     <!-- <context:load-time-weaver/>   -->
 
-    <context:component-scan base-package="controllers, services, repositories, models, ui, schema, spring, actors" />
+    <context:component-scan base-package="controllers, services, repositories, models, ui, schema, spring, actors, viewmodels" />
 
     <bean class="spring.SpringAkkaConfig" />
 
@@ -110,19 +110,19 @@
         </property>
     </bean>
 
+    <!--
     <bean id="presenter.tweets.full" class="viewmodels.TweetsFullPresenter">
         <constructor-arg>
-            <bean id="tweetsRepo" />
+            <ref bean="tweetsRepo" />
         </constructor-arg>
     </bean>
 
     <bean id="presenter.tweets.short" class="viewmodels.TweetsShortPresenter">
         <constructor-arg>
-            <bean id="tweetsRepo" />
+            <ref bean="tweetsRepo" />
         </constructor-arg>
     </bean>
-
-
+    -->
 
     <bean class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer"/>
 

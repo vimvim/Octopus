@@ -1,7 +1,11 @@
 package viewmodels
 
-import repositories.TweetsRepo
+import org.springframework.transaction.annotation.{Propagation, Transactional}
+import org.springframework.beans.factory.annotation.{Qualifier, Autowired}
+import org.springframework.stereotype.{Service, Component}
+
 import models.Tweet
+import repositories.TweetsRepo
 
 
 /**
@@ -9,12 +13,16 @@ import models.Tweet
  *
  * @param repo    Reference to the tweets repo
  */
-class TweetsFullPresenter(repo: TweetsRepo) extends ListPresenter[Tweet, TweetFull](repo)
+@Service("presenter.tweets.full")
+@Transactional(readOnly = false, propagation = Propagation.REQUIRED)
+class TweetsFullPresenter @Autowired()(@Autowired @Qualifier("tweetsRepo") repo: TweetsRepo) extends ListPresenter[Tweet, TweetFull](repo)
 
 /**
  * Present list of the tweets in the short format
  *
  * @param repo    Reference to the tweets repo
  */
-class TweetsShortPresenter(repo: TweetsRepo) extends ListPresenter[Tweet, TweetFull](repo)
+@Service("presenter.tweets.short")
+@Transactional(readOnly = false, propagation = Propagation.REQUIRED)
+class TweetsShortPresenter @Autowired()(@Autowired @Qualifier("tweetsRepo") repo: TweetsRepo) extends ListPresenter[Tweet, TweetFull](repo)
 

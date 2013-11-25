@@ -5,20 +5,27 @@ import play.api.mvc._
 import spring.SpringContextHolder
 import viewmodels.ListPresenter
 import models.Tweet
+import org.springframework.transaction.annotation.{Propagation, Transactional}
+import repositories.TweetsRepo
 
 /**
  *
  */
-@org.springframework.stereotype.Controller
+@org.springframework.stereotype.Controller("controller.Tweets")
 class Tweets extends Controller  {
 
   /**
    * List of the tweets
    * @return
    */
+  @Transactional(readOnly = true, propagation = Propagation.REQUIRED)
   def index = Action {
 
-    val presenter = SpringContextHolder.getContext().getBean("presenter.tweet.full", classOf[ListPresenter[Tweet, _]])
+    // This is for testing only
+    val repo = SpringContextHolder.getContext.getBean("tweetsRepo", classOf[TweetsRepo])
+    repo.totalCount
+
+    val presenter = SpringContextHolder.getContext.getBean("presenter.tweets.full", classOf[ListPresenter[Tweet, _]])
     val tweets = presenter.get(0, 10)
 
     Ok(views.html.index("Your new application is ready."))

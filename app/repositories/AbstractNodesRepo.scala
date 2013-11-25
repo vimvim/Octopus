@@ -1,6 +1,7 @@
 package repositories
 
 import scala.collection.JavaConverters._
+import scala.collection.JavaConversions._
 
 import javax.persistence.EntityManager
 
@@ -39,23 +40,27 @@ abstract class AbstractNodesRepo[T <: Node: Manifest](val entityClass: Class[T])
 
     val entityName = entityClass.getSimpleName
 
-    val query = entityManager.createQuery("SELECT COUNT(*) FROM "+entityName)
+    val query = entityManager.createQuery("SELECT entity FROM "+entityName+" entity")
     query.setFirstResult(offset)
     query.setMaxResults(limit)
 
-    val res = query.getResultList
+    val res = query.getResultList.toList
 
-    res.asScala.asInstanceOf[List[T]]
+    val res2 = res.asInstanceOf[List[T]]
+
+    res2
+
+    //res.asScala.asInstanceOf[List[T]]
   }
 
-  def totalCount: Int = {
+  def totalCount: Long = {
 
     val entityName = entityClass.getSimpleName
 
     val query = entityManager.createQuery("SELECT COUNT(*) FROM "+entityName)
 
     val res = query.getSingleResult
-    res.asInstanceOf[Int]
+    res.asInstanceOf[Long]
   }
 
   def find(id: Int): Option[T] = {

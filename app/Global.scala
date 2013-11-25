@@ -17,7 +17,7 @@ object Global extends GlobalSettings with VaadinSupport {
 
     super.onStart(app)
 
-    SpringContextHolder.getContext.start()
+    SpringContextHolder.init()
 
 
     // val dao: UsersDao = ctx.getBean(classOf[UsersDao])
@@ -32,11 +32,7 @@ object Global extends GlobalSettings with VaadinSupport {
   */
   override def onStop(app: Application) {
 
-    try {
-      SpringContextHolder.getContext.stop()
-    } catch {
-      case e:Exception =>
-    }
+    SpringContextHolder.shutdown()
 
     super.onStop(app)
   }
@@ -48,6 +44,12 @@ object Global extends GlobalSettings with VaadinSupport {
   * @param A
   * @return
   */
-  override def getControllerInstance[A](controllerClass: Class[A]): A = SpringContextHolder.getContext.getBean(controllerClass)
+  override def getControllerInstance[A](controllerClass: Class[A]): A = {
+
+    // val instance = SpringContextHolder.getContext.getBean(controllerClass)
+    val instance = SpringContextHolder.getContext.getBean("controller.Tweets")
+    instance.asInstanceOf[A]
+  }
+
 
 }

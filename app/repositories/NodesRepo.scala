@@ -17,6 +17,6 @@ trait NodesRepo[T <: Node] {
 
   def fetch(offset:Int, limit:Int):List[T]
 
-  def totalCount: Int
+  def totalCount: Long
 
 }
