@@ -13,6 +13,8 @@ import scala.Some
 import scala.Predef._
 import scala.Some
 import scala.reflect.Manifest
+import org.springframework.transaction.interceptor.{TransactionInterceptor, TransactionAspectSupport}
+import org.springframework.transaction.annotation.{Propagation, Transactional}
 
 /**
  *
@@ -36,7 +38,13 @@ abstract class AbstractNodesRepo[T <: Node: Manifest](val entityClass: Class[T])
     case _ => entityManager.merge(user)
   }
 
+  @Transactional(readOnly = false, propagation = Propagation.REQUIRED)
   def fetch(offset:Int, limit:Int):List[T] = {
+
+    // val transactionInfo = TransactionAspectSupport.currentTransactionInfo()
+
+    val transactionStatus = TransactionAspectSupport.currentTransactionStatus()
+    // TransactionInterceptor
 
     val entityName = entityClass.getSimpleName
 

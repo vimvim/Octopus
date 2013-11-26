@@ -3,10 +3,10 @@
 
     <persistence-unit name="Octopus">
         <provider>org.hibernate.ejb.HibernatePersistence</provider>
-        <!-- <non-jta-data-source>DefaultDS</non-jta-data-source> -->
+        <non-jta-data-source>DefaultDS</non-jta-data-source>
         <properties>
-            <!--<property name="hibernate.dialect" value="org.hibernate.dialect.MySQL5Dialect"/>
-            <property name="hibernate.hbm2ddl.auto" value="update"/> -->
+            <property name="hibernate.dialect" value="org.hibernate.dialect.MySQL5Dialect"/>
+            <property name="hibernate.hbm2ddl.auto" value="update"/>
         </properties>
 
             <!-- All properties needs to be specified in the context.xml
