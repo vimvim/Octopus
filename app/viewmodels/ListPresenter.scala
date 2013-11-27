@@ -19,18 +19,18 @@ class ListPresenter[T <:Node , VT <: ViewModel[T] : Manifest](_repo: NodesRepo[T
     repo.totalCount
   }
 
-  def get(offset:Int, limit:Int): List[T] = {
+  def get(offset:Int, limit:Int): List[VT] = {
 
     val constructors = manifest.erasure.getConstructors
     val constructor = constructors.apply(0)
 
     val models = repo.fetch(offset, limit)
 
-    var retVal: List[T] = List()
+    var retVal: List[VT] = List()
     for(model <- models) {
 
-      val viewModel = constructor.newInstance(model.asInstanceOf[T]).asInstanceOf[T]
-      retVal = viewModel:: retVal
+      val viewModel = constructor.newInstance(model.asInstanceOf[T])
+      retVal = viewModel.asInstanceOf[VT]::retVal
     }
 
     retVal
