@@ -1,0 +1,18 @@
+<!DOCTYPE aspectj PUBLIC
+        "-//AspectJ//DTD//EN" "http://www.eclipse.org/aspectj/dtd/aspectj.dtd">
+<aspectj>
+
+    <!--
+    <weaver>
+        <include within="models.*"/>
+
+    </weaver>
+    -->
+
+    <!--
+    <aspects>
+        <aspect name="foo.ProfilingAspect"/>
+    </aspects>
+    -->
+
+</aspectj>

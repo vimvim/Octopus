@@ -5,7 +5,7 @@ import scala.beans.BeanProperty
 import services.SchemaRefService
 import schema.{AttributeDescriptor, SchemaDescriptor, SchemasRegistry, NodeType}
 import java.util
-
+import org.springframework.beans.factory.annotation.{Autowired, Configurable}
 
 
 /**
@@ -14,6 +14,7 @@ import java.util
 @Entity
 @Table(name="nodes")
 @Inheritance(strategy=InheritanceType.JOINED)
+@Configurable
 abstract class Node {
 
   @Id
@@ -38,9 +39,11 @@ abstract class Node {
   var nodeType: NodeType[Node] =_
 
   @Transient
+  @Autowired
   var schemaRefService: SchemaRefService =_
 
   @Transient
+  @Autowired
   var schemasRegistry: SchemasRegistry =_
 
   def beginEdit(schemasRegistry: SchemasRegistry, schemaService: SchemaRefService) = {

@@ -21,6 +21,8 @@ libraryDependencies ++= Seq(
   cache
 )     
 
+javaOptions in run ++= Seq("-javaagent:lib/weaver/aspectjweaver.jar")
+
 play.Project.playScalaSettings
 
 playAssetsDirectories <+= baseDirectory / "VAADIN"

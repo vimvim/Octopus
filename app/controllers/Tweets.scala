@@ -55,9 +55,7 @@ class Tweets extends Controller  {
    * @return
    */
 
-  def index = Cached("tweets.index") {
-    Transactional {
-    Action {
+  def index = Transactional { Action {
 
     // This is for testing only
     val repo = SpringContextHolder.getContext.getBean("tweetsRepo", classOf[TweetsRepo])
@@ -70,7 +68,7 @@ class Tweets extends Controller  {
     val tweets = presenter.get(0, 10)
 
     Ok(views.html.index("Your new application is ready."))
-  }}}
+  }}
 
   def index2 = Action {
     Ok(views.html.index("Your new application is ready."))
