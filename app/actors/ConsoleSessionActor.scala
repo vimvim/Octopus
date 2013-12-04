@@ -1,0 +1,8 @@
+package actors
+
+/**
+ *
+ */
+class ConsoleSessionActor {
+
+}
