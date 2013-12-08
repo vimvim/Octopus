@@ -42,7 +42,7 @@ class Auth extends Controller {
         case None =>
       }
 
-      Ok(views.html.index("Your new application is ready.")).withSession(loginBackUrl -> backUrl)
+      Ok(views.html.login("")).withSession(loginBackUrl -> backUrl)
     }
   }
 
@@ -51,7 +51,7 @@ class Auth extends Controller {
    *
    * @return
    */
-  def auth = Action { request=>
+  def auth = Action { implicit request=>
 
     val authData: AuthData = authForm.bindFromRequest().get
 
