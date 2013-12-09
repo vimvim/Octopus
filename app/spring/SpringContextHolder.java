@@ -12,17 +12,24 @@ public class SpringContextHolder {
     private static boolean isInit = false;
 
     public static void init() {
-        try {
-            context.start();
-            isInit = true;
-        } catch (Exception ex) {
-            ex.printStackTrace();
+
+        if (!isInit) {
+
+            try {
+                context.start();
+                isInit = true;
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
         }
     }
 
     public static void shutdown() {
+
         if (isInit) {
+
             context.stop();
+            isInit = false;
         }
     }
 
