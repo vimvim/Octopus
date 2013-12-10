@@ -5,7 +5,7 @@ import scala.concurrent.duration._
 import scala.util.Random
 
 import actors._
-import akka.actor.Props
+import akka.actor.{ActorRef, Props}
 import akka.pattern.ask
 import akka.util.Timeout
 
@@ -20,6 +20,7 @@ import play.api.libs.iteratee.{Enumerator, Iteratee}
 import play.api.Routes
 
 import models.User
+import actors.console.{SessionCommand, SessionClosed, CreateSession}
 
 /**
  *
@@ -27,6 +28,7 @@ import models.User
 @org.springframework.stereotype.Controller
 class Console extends Controller with Secured {
 
+  var sessionManager:ActorRef
 
   /**
    * Will render console page or login page depends on the session auth info
@@ -43,6 +45,27 @@ class Console extends Controller with Secured {
    * @return
    */
 
+  def ws = withAuthWS { user =>
+
+    implicit val timeout = Timeout(3 seconds)
+
+    (sessionManager ? CreateSession(user.getId)) map {
+
+      enumerator =>
+
+        (Iteratee.foreach[JsValue] {
+          jsValue=>
+            sessionManager ! SessionCommand(user.getId, jsValue)
+
+        } mapDone {
+          _ =>
+            sessionManager ! SessionClosed(user.getId)
+
+        }, enumerator.asInstanceOf[Enumerator[JsValue]])
+    }
+  }
+
+  /*
   def ws = WebSocket.using[String] {
     request =>
 
@@ -58,6 +81,7 @@ class Console extends Controller with Secured {
       }
       (in, out)
   }
+  */
 
 }
 

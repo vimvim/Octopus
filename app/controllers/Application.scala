@@ -10,4 +10,13 @@ class Application extends Controller {
     Ok(views.html.index("Application is ready."))
   }
 
+  def javascriptRoutes = Action {
+    implicit request =>
+      Ok(
+        Routes.javascriptRouter("jsRoutes")(
+          routes.javascript.Console.ws
+        )
+      ).as("text/javascript")
+  }
+
 }

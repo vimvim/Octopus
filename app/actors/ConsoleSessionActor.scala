@@ -1,8 +1,0 @@
-package actors
-
-/**
- *
- */
-class ConsoleSessionActor {
-
-}
