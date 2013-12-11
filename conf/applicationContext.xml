@@ -113,6 +113,10 @@
         </property>
     </bean>
 
+    <bean id="consoleSessionHandler.Actor" class="actors.console.SessionHandlerFactory"  scope="prototype" factory-method="create">
+        <!--<constructor-arg value="default value"/>-->
+    </bean>
+
     <!--
     <bean id="presenter.tweets.full" class="viewmodels.TweetsFullPresenter">
         <constructor-arg>

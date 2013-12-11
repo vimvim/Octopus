@@ -3,6 +3,7 @@ package spring;
 import java.util.ArrayList;
 import java.util.List;
 
+import actors.console.SessionsManager;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Lazy;
@@ -28,10 +29,19 @@ public class SpringAkkaConfig {
         return Akka.system();
     }
 
+    @Bean(name = "consoleSessionManager")
+    @Scope("prototype")
+    @Lazy
+    public ActorRef consoleSessionManager() {
+        return SpringAkka.createActor(actorSystem(), SessionsManager.class);
+    }
+
     @Bean(name = "topsyTweetsParser")
     @Scope("prototype")
     @Lazy
     public ActorRef topsyTweetsParser() {
+
+        // TODO: Refactor using SpringAkka
 
         List args = new ArrayList();
         args.add(TopsyTweetsParser.class);
@@ -50,6 +60,8 @@ public class SpringAkkaConfig {
     @Scope("prototype")
     @Lazy
     public ActorRef fileBatchLoader()  {
+
+        // TODO: Refactor using SpringAkka
 
         List args = new ArrayList();
         args.add(FileBatchLoader.class);

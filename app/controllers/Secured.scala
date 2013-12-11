@@ -1,14 +1,17 @@
 package controllers
 
-import play.api.mvc._
-import play.api.mvc.Results._
-import scala.Some
-import models.User
-import scala.Some
-import play.api.mvc.SimpleResult
 import scala.concurrent.Future
+import scala.Some
+
 import play.api.libs.iteratee.{Enumerator, Iteratee}
 import play.api.libs.json.{Json, JsValue}
+import play.api.libs.concurrent.Execution.Implicits._
+import play.api.mvc._
+import play.api.mvc.Results._
+import play.api.mvc.SimpleResult
+
+import models.User
+
 
 /**
  *

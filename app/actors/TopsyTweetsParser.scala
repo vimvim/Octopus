@@ -4,7 +4,7 @@ import java.io.{FileReader, BufferedReader, File}
 
 import org.springframework.stereotype.Component
 import org.springframework.beans.factory.annotation.{Qualifier, Autowired}
-import org.springframework.context.annotation.Lazy
+import org.springframework.context.annotation.{Scope, Lazy}
 import org.springframework.transaction.annotation.{Propagation, Transactional}
 
 import akka.actor.Actor
@@ -17,9 +17,10 @@ import repositories.{SocialUsersRepo, TweetsRepo}
 import models.{Tweet, SocialUser}
 
 /**
- *
+ * TODO: Check and remove Component annotation because component is handled by SpringAkkaConfig
  */
 @Component("TopsyTweetsParser.Actor")
+@Scope("prototype")
 @Lazy
 class TopsyTweetsParser extends Actor {
 
