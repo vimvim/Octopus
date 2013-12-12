@@ -16,6 +16,7 @@ case class AuthData(username: String, password:String)
 /**
  * Handle user login
  */
+@org.springframework.stereotype.Controller
 class Auth extends Controller {
 
   lazy val loginBackUrl: String = "loginBack"

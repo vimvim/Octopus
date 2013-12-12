@@ -8,7 +8,7 @@ import scala.collection.mutable.ListBuffer
 /**
  * Akka Spring integration for AKKA 2.2
  */
-class SpringActorProducer(val actorClass: Class[_ <: Actor], val beanName: String, val beanArguments:ListBuffer[_] = null) extends IndirectActorProducer {
+class SpringActorProducer(val actorClass: Class[_ <: Actor], val beanName: String, val beanArguments:java.util.List[_] = null) extends IndirectActorProducer {
 
   // val actorClass: Class[_ <: Actor] = cls
 

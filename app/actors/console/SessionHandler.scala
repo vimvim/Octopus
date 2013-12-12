@@ -6,18 +6,23 @@ import play.api.Logger
 import play.api.libs.iteratee.Concurrent.Channel
 import play.api.libs.json.JsValue
 
-import org.springframework.stereotype.Component
-import org.springframework.context.annotation.{Scope, Lazy}
+import org.springframework.beans.factory.annotation.{Autowired, Qualifier, Configurable}
+
+import services.TweetService
+
 
 /**
  * Handle console session
  */
-@Component("ConsoleSessionHandler.Actor")
-@Scope("prototype")
-@Lazy
+@Configurable
 class SessionHandler(val userId:Int, val channel:Channel[JsValue]) extends Actor {
 
   lazy val log = Logger("application." + this.getClass.getName)
+
+  // ONLY FOR TESTING
+  @Autowired
+  @Qualifier("tweetService")
+  var tweetService: TweetService =_
 
   def receive: Actor.Receive = {
 
@@ -35,6 +40,3 @@ class SessionHandler(val userId:Int, val channel:Channel[JsValue]) extends Actor
 
 }
 
-object SessionHandlerFactory {
-  def create(userId:Int, channel:Channel[JsValue]) = new SessionHandler(userId, channel)
-}

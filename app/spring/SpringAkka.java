@@ -18,6 +18,7 @@ public class SpringAkka {
         List args = new ArrayList();
         args.add(Actor.class);
         args.add(beanName);
+        args.add(null);
 
         return actorSystem.actorOf(Props.create(SpringActorProducer.class, scala.collection.JavaConversions.asScalaBuffer(args)));
     }
@@ -37,6 +38,7 @@ public class SpringAkka {
         List args = new ArrayList();
         args.add(actorClass);
         args.add("");
+        args.add(null);
 
         return actorSystem.actorOf(Props.create(SpringActorProducer.class, scala.collection.JavaConversions.asScalaBuffer(args)));
     }

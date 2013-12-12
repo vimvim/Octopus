@@ -7,14 +7,14 @@ import akka.actor.{Props, ActorRef, Actor}
 
 import play.api.Logger
 import play.api.libs.iteratee.{Concurrent, Enumerator}
-import play.api.libs.json.JsValue
+import play.api.libs.json.{JsNull, JsValue}
 import play.api.libs.iteratee.Concurrent.Channel
 import play.libs.Akka
 
 import org.springframework.stereotype.Component
 import org.springframework.context.annotation.Lazy
 
-import spring.SpringAkka
+import spring.{SpringActorProducer, SpringAkka}
 
 
 /**
@@ -36,18 +36,13 @@ class SessionsManager extends Actor {
 
       val consoleSession: ConsoleSession = sessions.get(userId) getOrElse {
 
+        log.debug(s"Create new session handler for $userId")
+
         val broadcast: (Enumerator[JsValue], Channel[JsValue]) = Concurrent.broadcast[JsValue]
 
-        val sessionHandler = SpringAkka.createActor(Akka.system, "consoleSessionHandler.Actor", ListBuffer(userId, broadcast._2))
+        val sessionHandler = Akka.system.actorOf(Props(classOf[SessionHandler], userId, broadcast._2))
 
-        /*
-        val args: List[_] = new ArrayList[_]
-        args.add(classOf[SessionHandler])
-        args.add("")
-
-        actorSystem.actorOf(Props.create(classOf[SpringActorProducer], scala.collection.JavaConversions.asScalaBuffer(args)))
-        val sessionHandler = SpringContextHolder.getContext.getBean(workerBeanName).asInstanceOf[ActorRef]
-        */
+        // sessionHandler ! SessionCommand(JsNull)
 
         ConsoleSession(userId, broadcast._1, broadcast._2, sessionHandler)
       }
