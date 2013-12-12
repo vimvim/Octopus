@@ -2,12 +2,27 @@
 
 @layout("Console") {
 
-    Username: @username
+    <div id="console">
 
-    <div id="console-display">
+        <div class="page-header">
+            <h1>Console</h1>
+        </div>
+
+        <div id="console-display">
+            <ul>
+                <li>Octopus console</li>
+            </ul>
+        </div>
+
+        <form id="input-form" class="form-inline" role="form">
+
+            <div class="form-group col-xs-7">
+                <label class="sr-only" for="console-input">Command</label>
+                <input type="text" class="form-control" id="console-input" placeholder="Enter command">
+            </div>
+
+            <button type="submit" class="btn btn-default" id="console-send">Send</button>
+        </form>
 
     </div>
-
-    <textarea id="console-input" /> <button id="console-send">Send</button>
-
 }

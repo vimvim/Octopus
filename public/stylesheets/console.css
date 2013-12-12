@@ -1,0 +1,29 @@
+
+#console {
+    background-color: #fff;
+    border-width: 1px;
+    border-color: #ddd;
+    border-radius: 4px 4px 0 0;
+    box-shadow: none;
+    position: absolute;
+    top: 5px;
+    bottom: 5px;
+    left: 0px;
+    right: 0px;
+}
+
+#console-display {
+    position: absolute;
+    top: 105px;
+    bottom: 55px;
+    left: 0px;
+    right: 0px;
+    border-bottom: 1px solid #eee;
+}
+
+#console #input-form {
+    position: absolute;
+    bottom: 10px;
+    left: 5px;
+    right: 5px;
+}

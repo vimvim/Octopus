@@ -8,10 +8,16 @@ html, body {
     height: auto;
     margin: 0 auto -60px;
     padding: 0 0 60px;
+    position: relative;
 }
 
 #wrap > .container {
-    padding: 60px 15px 0;
+    /* padding: 60px 15px 0; */
+    position: absolute;
+    top: 50px;
+    bottom: 60px;
+    left: 0px;
+    right: 0px;
 }
 
 #footer {

@@ -19,12 +19,21 @@ $( document ).ready(function() {
 
     // Log messages from the server
     connection.onmessage = function (e) {
+
         var obj = JSON.parse(e.data);
+
+        $("#console-display ul").append("<li>"+obj.response+"</li>");
+
         console.log('Server: ', obj);
     };
 
+    $("#console-send").click(function(){
 
+        var text = $("#console-input").val();
 
-
-
+        connection.send(JSON.stringify({
+            command: "command",
+            text: text
+        }));
+    });
 });
