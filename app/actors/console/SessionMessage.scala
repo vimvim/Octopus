@@ -13,3 +13,4 @@ case class SessionClosed(userId: Int) extends SessionMessage
 
 case class SessionCommand(jsValue:JsValue) extends SessionMessage
 
+case class SimpleResponse(jsValue:JsValue) extends SessionMessage

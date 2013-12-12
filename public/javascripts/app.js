@@ -32,8 +32,8 @@ $( document ).ready(function() {
         var text = $("#console-input").val();
 
         connection.send(JSON.stringify({
-            command: "command",
-            text: text
+            command: "execute",
+            data: text
         }));
     });
 });
