@@ -27,7 +27,7 @@ $( document ).ready(function() {
         console.log('Server: ', obj);
     };
 
-    $("#console-send").click(function(){
+    $("#console-send").click(function(e){
 
         var text = $("#console-input").val();
 
@@ -35,5 +35,8 @@ $( document ).ready(function() {
             command: "execute",
             data: text
         }));
+
+        e.preventDefault();
+        return true;
     });
 });

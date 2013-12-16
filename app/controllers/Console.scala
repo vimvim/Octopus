@@ -22,7 +22,11 @@ import org.springframework.beans.factory.annotation.{Qualifier, Autowired}
 
 import models.User
 
-import actors.console.{ConsoleSession, SessionCommand, SessionClosed, CreateSession}
+import actors.console._
+import actors.console.ConsoleSession
+import actors.console.CreateSession
+import actors.console.SessionCommand
+import actors.console.SessionClosed
 
 /**
  *
@@ -60,7 +64,13 @@ class Console extends Controller with Secured {
 
         (Iteratee.foreach[JsValue] {
           jsValue=>
-            session.handler ! SessionCommand(jsValue)
+            (session.handler ? SessionCommand(jsValue)) onSuccess {
+
+              case SimpleResponse(respJsValue)   =>
+                session.channel.push(respJsValue)
+
+              case _ => println("Unexpected response")
+            }
 
         } mapDone {
           _ =>
