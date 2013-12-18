@@ -114,6 +114,36 @@
     </bean>
 
     <!--
+    <bean id="rootShellMeta" class="console.BaseShellMeta">
+        <constructor-arg>
+            <map key-type="java.lang.String" value-type="java.lang.Class">
+                <entry key="repository" value-ref="console.RepositoriesShell" />
+            </map>
+        </constructor-arg>
+    </bean>
+    -->
+
+    <bean id="rootShellsBindings" class="java.util.TreeMap">
+        <constructor-arg>
+            <map key-type="java.lang.String" value-type="java.lang.Object">
+                <entry key="repository" value-ref="rootShellsBindings" />
+            </map>
+        </constructor-arg>
+    </bean>
+
+    <bean id="shellsBindings" class="java.util.TreeMap">
+        <constructor-arg>
+            <map key-type="java.lang.Class" value-type="java.util.TreeMap">
+                <entry key="console.RootShell" value-ref="rootShellsBindings" />
+            </map>
+        </constructor-arg>
+    </bean>
+
+    <bean id="consoleEnvInit" class="java.util.TreeMap">
+    </bean>
+
+
+    <!--
     <bean id="consoleSessionHandler.Actor" class="actors.console.SessionHandlerFactory$.MODULE$"  scope="prototype" factory-method="create">
 
     </bean>

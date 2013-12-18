@@ -1,0 +1,8 @@
+package console
+
+/**
+ *
+ */
+class ShellMetaClass {
+
+}
