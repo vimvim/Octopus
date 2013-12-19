@@ -3,14 +3,14 @@ package console
 /**
  * Represent command delegated for execution from console script to upper level class.
  */
-sealed case class DelegatedCommand() { }
+sealed class DelegatedCommand() { }
 
 /**
  * Open sub shell
  *
  * @param shellClass    Shell class
  */
-case class OpenSubShell(shellClass:Class) extends DelegatedCommand
+case class OpenSubShell[T<: BaseShell](name: String, shellClass:Class[T]) extends DelegatedCommand
 
 /**
  * Return from sub shell to the upper level shell.

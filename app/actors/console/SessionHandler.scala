@@ -16,7 +16,7 @@ import org.codehaus.groovy.control.CompilerConfiguration
 import groovy.lang._
 
 import services.TweetService
-import console.RootShell
+import console.{ErrorResult, SuccessResult, ConsoleShell, RootShell}
 
 
 /**
@@ -28,13 +28,11 @@ class SessionHandler(val userId:Int, val channel:Channel[JsValue]) extends Actor
   lazy val log = Logger("application." + this.getClass.getName)
 
   // ONLY FOR TESTING
-  @Autowired
-  @Qualifier("tweetService")
-  var tweetService: TweetService =_
+  // @Autowired
+  // @Qualifier("tweetService")
+  // var tweetService: TweetService =_
 
-  var shell:GroovyShell =_
-
-  var outStream: ByteArrayOutputStream =_
+  val consoleShell = new ConsoleShell()
 
   def receive: Actor.Receive = {
 
@@ -49,107 +47,58 @@ class SessionHandler(val userId:Int, val channel:Channel[JsValue]) extends Actor
 
           log.debug(s"Open session for user $userId")
 
-          reportResult("Session opened")
+          reportResult(consoleShell.prompt, "Session opened")
 
         case JsString("execute") =>
 
           data match {
 
             case JsString(text) =>
+
               log.debug(s"Execute '$text' for user $userId session")
 
-              try {
-
-                shell.evaluate(text)
-                val out = shell.getProperty("out").asInstanceOf[PrintWriter]
-                out.flush()
-
-                reportResult(outStream.toString)
-
-              } catch {
-
-                case e: MissingMethodException => reportError(e.getMessage)
-
-                case e: MissingPropertyException => reportError(e.getMessage)
-
-                case e: Exception => reportError(fullExceptionText(e))
-
+              consoleShell.execute(text) match {
+                case SuccessResult(prompt, output, delegatingCommands) =>  reportResult(prompt, output)
+                case ErrorResult(prompt, output, error, delegatingCommands) => reportError(prompt, output, error)
               }
 
-            case _ =>
-              log.debug(s"Invalid command format received for user $userId session")
+            case _ => log.debug(s"Invalid command format received for user $userId session")
 
           }
 
-        case JsString(cmd) =>
+        case JsString(cmd) => log.debug(s"Unknown command $cmd received for user $userId session")
 
-          log.debug(s"Unknown command $cmd received for user $userId session")
-
-        case _ =>
-
-          log.debug(s"Invalid command format received for user $userId session")
+        case _ => log.debug(s"Invalid command format received for user $userId session")
 
       }
-
   }
 
-  override def preStart(): Unit = {
-
-    log.debug(s"Start session handler for user $userId session")
-
-    // TODO: Only for testing . Find better way to create GroovyShell ( ie: Spring, ... )
-
-    outStream = new ByteArrayOutputStream()
-    val printWriter = new PrintWriter(outStream)
-
-    val bindings = new Binding()
-    bindings.setProperty("out", printWriter)
-
-    val configuration = new CompilerConfiguration()
-    configuration.setScriptBaseClass(classOf[RootShell].getCanonicalName)
-
-    shell = new GroovyShell(classOf[RootShell].getClassLoader, bindings, configuration)
-
-    // val compilerConfiguration = new CompilerConfiguration();
-    // compilerConfiguration.setScriptBaseClass(classOf[RootShell].getCanonicalName)
-
-    // val scriptClassLoader = new GroovyClassLoader(classOf[RootShell].getClassLoader, compilerConfiguration)
-
-    // shell = new GroovyShell(scriptClassLoader, new Binding(), compilerConfiguration)
-  }
+  override def preStart(): Unit = log.debug(s"Start session handler for user $userId session")
 
   override def postStop(): Unit = log.debug(s"Stop session handler for user $userId session")
 
-  private def reportResult(message:String):Unit = {
+  private def reportResult(prompt:String, output:String):Unit = {
+
+    log.debug(s"Command completed for user $userId session: $prompt # $output \r\n ")
 
     sender ! SimpleResponse(Json.obj(
-      "success" -> JsBoolean(true),
-      "response" -> JsString(message)
+      "success" -> JsBoolean(value = true),
+      "prompt" -> JsString(prompt),
+      "output" -> JsString(output)
     ))
   }
 
-  private def reportError(message:String):Unit = {
+  private def reportError(prompt:String, output:String, error:String):Unit = {
 
-    log.debug(s"Something goes wrong for user $userId session: \r\n $message")
+    log.debug(s"Something goes wrong for user $userId session: \r\n $error")
 
     sender ! SimpleResponse(Json.obj(
-      "success" -> JsBoolean(false),
-      "response" -> JsString(message)
+      "success" -> JsBoolean(value = false),
+      "prompt" -> JsString(prompt),
+      "output" -> JsString(output),
+      "error" -> JsString(error)
     ))
   }
-
-  private def fullExceptionText(e:Exception):String = {
-
-    val stream = new ByteArrayOutputStream()
-    val printStream = new PrintStream(stream)
-
-    e.printStackTrace(printStream)
-
-    printStream.toString
-  }
-
-
-
 
 }
 

@@ -4,4 +4,8 @@ package console
  * Result of the command execution.
  *
  */
-case class Result(label: String, output: String, delegatingCommands: List[DelegatedCommand]) { }
+sealed class Result()
+
+case class SuccessResult(label: String, output: String, delegatingCommands: List[DelegatedCommand]) extends Result
+
+case class ErrorResult(label: String, output: String, error: String, delegatingCommands: List[DelegatedCommand]) extends Result

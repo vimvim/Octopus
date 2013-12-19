@@ -22,7 +22,7 @@ $( document ).ready(function() {
 
         var obj = JSON.parse(e.data);
 
-        $("#console-display ul").append("<li>"+obj.response+"</li>");
+        $("#console-display ul").append("<li>"+obj.prompt+" # "+obj.output+"</li>");
 
         console.log('Server: ', obj);
     };

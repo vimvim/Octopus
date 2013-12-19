@@ -123,6 +123,7 @@
     </bean>
     -->
 
+    <!--
     <bean id="rootShellsBindings" class="java.util.TreeMap">
         <constructor-arg>
             <map key-type="java.lang.String" value-type="java.lang.Object">
@@ -138,9 +139,9 @@
             </map>
         </constructor-arg>
     </bean>
+    -->
 
-    <bean id="consoleEnvInit" class="java.util.TreeMap">
-    </bean>
+    <bean id="consoleEnv" class="console.ConsoleEnv"  />
 
 
     <!--
