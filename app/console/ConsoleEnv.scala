@@ -1,6 +1,7 @@
 package console
 
 import org.codehaus.groovy.runtime.InvokerHelper
+import console.shells.{RepositoriesShell, RootShell}
 
 /**
  * Class initialize console ( groovy ) env at the startup.

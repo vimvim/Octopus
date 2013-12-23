@@ -1,6 +1,7 @@
 package console
 
 import groovy.lang.{MetaProperty, DelegatingMetaClass}
+import console.shells.BaseShell
 
 
 /**

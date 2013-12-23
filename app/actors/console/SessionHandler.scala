@@ -16,7 +16,7 @@ import org.codehaus.groovy.control.CompilerConfiguration
 import groovy.lang._
 
 import services.TweetService
-import console.{ErrorResult, SuccessResult, ConsoleShell, RootShell}
+import console.{ErrorResult, SuccessResult, ConsoleShell}
 
 
 /**

@@ -1,4 +1,6 @@
-package console
+package console.shells
+
+import console.shells.BaseShell
 
 /**
  * Shell implements common repositories management operations.

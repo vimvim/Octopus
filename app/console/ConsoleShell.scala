@@ -4,6 +4,7 @@ import java.io.{PrintStream, PrintWriter, ByteArrayOutputStream}
 import groovy.lang.{MissingPropertyException, MissingMethodException, GroovyShell, Binding}
 import org.codehaus.groovy.control.CompilerConfiguration
 import org.codehaus.groovy.runtime.InvokerHelper
+import console.shells.RootShell
 
 
 /**
@@ -11,7 +12,7 @@ import org.codehaus.groovy.runtime.InvokerHelper
  */
 class ConsoleShell {
 
-  var shellClasses:List[Class[_]] = List(classOf[console.RootShell])
+  var shellClasses:List[Class[_]] = List(classOf[RootShell])
 
   var subShellLabels = List[String]("Octo")
 

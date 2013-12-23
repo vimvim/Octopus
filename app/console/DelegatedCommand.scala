@@ -1,5 +1,7 @@
 package console
 
+import console.shells.BaseShell
+
 /**
  * Represent command delegated for execution from console script to upper level class.
  */

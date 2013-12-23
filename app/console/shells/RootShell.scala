@@ -1,7 +1,8 @@
-package console
+package console.shells
 
 import scala._
 import groovy.lang.{MissingMethodException, Script}
+import console.shells.BaseShell
 
 /**
 
