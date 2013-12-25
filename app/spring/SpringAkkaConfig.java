@@ -3,7 +3,7 @@ package spring;
 import java.util.ArrayList;
 import java.util.List;
 
-import actors.console.SessionsManager;
+import octorise.console.SessionsManager;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Lazy;

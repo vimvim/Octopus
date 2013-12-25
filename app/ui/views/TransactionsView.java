@@ -5,7 +5,7 @@ import com.vaadin.addon.jpacontainer.JPAContainerFactory;
 import com.vaadin.navigator.View;
 import com.vaadin.navigator.ViewChangeListener;
 import com.vaadin.ui.*;
-import models.Tweet;
+import octorise.repo.octopus.models.Tweet;
 import spring.SpringContextHolder;
 import ui.services.TopsyTweetsHandler;
 

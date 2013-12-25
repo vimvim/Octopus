@@ -1,18 +1,21 @@
 package controllers
 
+import scala.concurrent.Future
+
 import play.api._
 import play.api.mvc._
 import play.api.Play.current
-import spring.SpringContextHolder
-import viewmodels.ListPresenter
-import models.Tweet
 import play.api.cache.Cached
-import scala.concurrent.Future
+
 import org.springframework.transaction.{TransactionDefinition, PlatformTransactionManager}
 import org.springframework.transaction.support.DefaultTransactionDefinition
 
-// import org.springframework.transaction.annotation.{Propagation, Transactional}
-import repositories.TweetsRepo
+import spring.SpringContextHolder
+
+import octorise.repo.octopus.models.Tweet
+import octorise.viewmodel.ListPresenter
+import octorise.repo.octopus.repositories.TweetsRepo
+
 
 case class Transactional[A](action: Action[A]) extends Action[A] {
 

@@ -21,7 +21,7 @@
     <context:load-time-weaver weaver-class="org.springframework.instrument.classloading.InstrumentationLoadTimeWeaver" />
     -->
 
-    <context:component-scan base-package="controllers, services, repositories, models, ui, schema, spring, actors, viewmodels" />
+    <context:component-scan base-package="controllers, octorise.repo.octopus.services, octorise.repo.octopus.repositories, models, ui, octorise.repo.octopus.schema, spring, actors, viewmodels" />
 
     <bean class="spring.SpringAkkaConfig" />
 
@@ -97,31 +97,21 @@
         </constructor-arg>
     </bean>
 
-    <bean id="schemasRegistry" class="schema.SchemasRegistry">
+    <bean id="schemasRegistry" class="octorise.repo.octopus.schema.SchemasRegistry">
         <property name="schemas">
             <list>
-                <bean id="schema.UserTwitter" class="schema.SchemaDescriptor" p:name="twitter.user">
+                <bean id="schema.UserTwitter" class="octorise.repo.octopus.schema.SchemaDescriptor" p:name="twitter.user">
                     <property name="descriptors">
                         <list>
-                            <bean class="schema.AttributeDescriptorInt" p:name="id" />
-                            <bean class="schema.AttributeDescriptorString" p:name="screen_name" />
-                            <bean class="schema.AttributeDescriptorString" p:name="name" />
+                            <bean class="octorise.repo.octopus.schema.AttributeDescriptorInt" p:name="id" />
+                            <bean class="octorise.repo.octopus.schema.AttributeDescriptorString" p:name="screen_name" />
+                            <bean class="octorise.repo.octopus.schema.AttributeDescriptorString" p:name="name" />
                         </list>
                     </property>
                 </bean>
             </list>
         </property>
     </bean>
-
-    <!--
-    <bean id="rootShellMeta" class="console.BaseShellMeta">
-        <constructor-arg>
-            <map key-type="java.lang.String" value-type="java.lang.Class">
-                <entry key="repository" value-ref="console.shells.RepositoriesShell" />
-            </map>
-        </constructor-arg>
-    </bean>
-    -->
 
     <!--
     <bean id="rootShellsBindings" class="java.util.TreeMap">
@@ -135,13 +125,13 @@
     <bean id="shellsBindings" class="java.util.TreeMap">
         <constructor-arg>
             <map key-type="java.lang.Class" value-type="java.util.TreeMap">
-                <entry key="console.shells.RootShell" value-ref="rootShellsBindings" />
+                <entry key="octorise.console.shells.RootShell" value-ref="rootShellsBindings" />
             </map>
         </constructor-arg>
     </bean>
     -->
 
-    <bean id="consoleEnv" class="console.ConsoleEnv"  />
+    <bean id="consoleEnv" class="octorise.console.ConsoleEnv"  />
 
 
     <!--

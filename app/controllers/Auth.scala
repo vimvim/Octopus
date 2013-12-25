@@ -9,7 +9,7 @@ import play.api.mvc.Results._
 
 import format.Formats._
 
-import models.User
+import octorise.repo.octopus.models.User
 
 case class AuthData(username: String, password:String)
 

@@ -10,7 +10,7 @@ import play.api.mvc._
 import play.api.mvc.Results._
 import play.api.mvc.SimpleResult
 
-import models.User
+import octorise.repo.octopus.models.User
 
 
 /**

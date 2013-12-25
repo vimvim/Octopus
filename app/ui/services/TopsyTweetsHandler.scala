@@ -1,27 +1,18 @@
 package ui.services
 
-import com.vaadin.server.Page
-import com.vaadin.ui.Notification
-import com.vaadin.ui.Upload
-import models.SocialUser
-import models.Tweet
-import org.codehaus.jackson.JsonNode
-import org.codehaus.jackson.map.ObjectMapper
+import java.io._
+import actors.{FileBatchLoad, FileBatchLoader, TopsyTweetsParser}
+import akka.actor.{ActorRef, Props}
+
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.factory.annotation.Qualifier
 import org.springframework.context.annotation.Scope
 import org.springframework.stereotype.Component
-import repositories.SocialUsersRepo
-import repositories.TweetsRepo
-import scala.Function1
-import scala.runtime.AbstractFunction1
-import scala.runtime.BoxedUnit
-import services.{SocialUserService, TweetService}
-import java.io._
-import actors.{FileBatchLoad, FileBatchLoader, TopsyTweetsParser}
-import akka.actor.{ActorRef, Props}
-import play.libs.Akka
-import spring.SpringActorProducer
+
+import com.vaadin.server.Page
+import com.vaadin.ui.Notification
+import com.vaadin.ui.Upload
+
 
 /**
  * Handle tweets uploaded in the JSOn from from topsy service.

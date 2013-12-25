@@ -11,10 +11,8 @@ import akka.actor.Actor
 
 import org.codehaus.jackson.map.ObjectMapper
 import org.codehaus.jackson.JsonNode
+import octorise.repo.octopus.services.TweetService
 
-import services.{SocialUserService, TweetService}
-import repositories.{SocialUsersRepo, TweetsRepo}
-import models.{Tweet, SocialUser}
 
 /**
  * TODO: Check and remove Component annotation because component is handled by SpringAkkaConfig

@@ -17,16 +17,14 @@ import play.api.libs.concurrent.Execution.Implicits._
 import play.api.libs.iteratee.{Enumerator, Iteratee}
 import play.api.Routes
 
-
 import org.springframework.beans.factory.annotation.{Qualifier, Autowired}
 
-import models.User
-
-import actors.console._
-import actors.console.ConsoleSession
-import actors.console.CreateSession
-import actors.console.SessionCommand
-import actors.console.SessionClosed
+import octorise.repo.octopus.models.User
+import octorise.console._
+import octorise.console.ConsoleSession
+import octorise.console.CreateSession
+import octorise.console.SessionCommand
+import octorise.console.SessionClosed
 
 /**
  *

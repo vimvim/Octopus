@@ -1,6 +1,7 @@
 package viewmodels
 
-import models.Tweet
+import octorise.repo.octopus.models.Tweet
+import octorise.viewmodel.ViewModel
 
 /**
  *

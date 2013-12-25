@@ -1,12 +1,12 @@
 package ui.services;
 
 import com.google.common.eventbus.EventBus;
-import models.User;
+import octorise.repo.octopus.models.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Service;
-import repositories.UsersRepo;
-import services.UserService;
+import octorise.repo.octopus.repositories.UsersRepo;
+import octorise.repo.octopus.services.UserService;
 import ui.events.LoggedInEvent;
 
 /**

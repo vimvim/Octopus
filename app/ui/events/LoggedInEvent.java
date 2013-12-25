@@ -1,6 +1,6 @@
 package ui.events;
 
-import models.User;
+import octorise.repo.octopus.models.User;
 
 /**
  *

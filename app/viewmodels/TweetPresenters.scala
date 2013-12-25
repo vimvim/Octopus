@@ -4,8 +4,9 @@ import org.springframework.transaction.annotation.{Propagation, Transactional}
 import org.springframework.beans.factory.annotation.{Qualifier, Autowired}
 import org.springframework.stereotype.{Service, Component}
 
-import models.Tweet
-import repositories.TweetsRepo
+import octorise.repo.octopus.models.Tweet
+import octorise.viewmodel.ListPresenter
+import octorise.repo.octopus.repositories.TweetsRepo
 
 
 /**
