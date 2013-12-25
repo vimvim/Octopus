@@ -50,9 +50,10 @@ abstract class OctopusRepoShell extends BaseShell {
       case Some(nodeType) =>
 
         // nodeType.repo.findBySlug()
-        val node = nodeType.service.create({node=>
-          initClosure.setDelegate(node)
-          initClosure.run()
+        val node = nodeType.service.create({
+          node=>
+            initClosure.setDelegate(node)
+            initClosure.run()
         })
 
         println(s"Node created: $node")
@@ -73,17 +74,21 @@ abstract class OctopusRepoShell extends BaseShell {
 
   def edit(slug:String, editClosure: Closure):Node = {
 
-    val currentNode = getProperty("node")
+    val currentNode = getProperty("node").asInstanceOf[Node]
 
     nodeApiFacade.findBySlug(currentNode, slug, {(node, service, repo)=>
 
       editClosure.setDelegate(node)
 
-      service.update({node=>
-        editClosure.run()
+      service.update({
+        node=>
+          editClosure.run()
       })
+
     }) match {
+
       case Some(node) => node
+
       case None =>
         println(s"Node :$slug is not found")
         null

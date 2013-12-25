@@ -22,20 +22,22 @@ class NodeApiFacade {
   @Autowired
   var typesRegister:NodeTypesRegister =_
 
-  def findBySlug[T <: Node](parent:Node, slug:String, handler:(T, NodeService[T] ) => Unit):Option[T] = {
+  def findBySlug[T <: Node](parent:Node, slug:String, handler:(T, NodeService[T], NodesRepo[T]) => Unit):Option[T] = {
 
     nodesRepo.findBySlug(parent, slug) match {
+
       case Some(node) =>
 
-        typesRegister.getNodeType(node) match {
+        val foundNode = node.asInstanceOf[T]
+
+        typesRegister.getNodeType(foundNode) match {
           case Some(nodeType) =>
 
-            handler(node, nodeType.service, nodeType.repo)
-            Some(node)
+            handler(foundNode, nodeType.service, nodeType.repo)
+            Some(foundNode)
 
           case None => None
         }
-
 
       case None => None
     }
