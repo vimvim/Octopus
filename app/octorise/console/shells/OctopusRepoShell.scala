@@ -53,6 +53,7 @@ abstract class OctopusRepoShell extends BaseShell {
         val node = nodeType.service.create({
           node=>
             initClosure.setDelegate(node)
+            initClosure.setResolveStrategy(Closure.DELEGATE_ONLY)
             initClosure.run()
         })
 
@@ -79,6 +80,7 @@ abstract class OctopusRepoShell extends BaseShell {
     nodeApiFacade.findBySlug[Node](currentNode, slug, {(node, service, repo)=>
 
       editClosure.setDelegate(node)
+      editClosure.setResolveStrategy(Closure.DELEGATE_ONLY)
 
       service.update(node, {
         node=>
