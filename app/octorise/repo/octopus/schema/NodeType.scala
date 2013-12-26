@@ -8,16 +8,9 @@ import octorise.repo.octopus.repositories.NodesRepo
 /**
  *
  */
-class NodeType[T <: Node] {
-
-  var name: String =_
-
-  var extend: Set[NodeType[Node]] =_
-
-  var applicableSchema: Set[SchemaDescriptor] =_
-
-  var service: NodeService[T] =_
-
-  var repo: NodesRepo[T] =_
-
-}
+class NodeType[T <: Node] (
+   val name: String,
+   val baseType: NodeType[_],
+   val service: NodeService[T],
+   val repo: NodesRepo[T]
+)

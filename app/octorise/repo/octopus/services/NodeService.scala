@@ -10,7 +10,7 @@ trait NodeService[ T <: Node] {
 
   def create(initializer:(T) => Unit):T
 
-  def update(initializer:(T) => Unit):T
+  def update(node:T, initializer:(T) => Unit):T
 
   def repo(): NodesRepo[T]
 

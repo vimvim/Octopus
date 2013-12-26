@@ -31,6 +31,15 @@ abstract class Node {
   var name: String = _
 
   @BeanProperty
+  @Column(name="slug")
+  var slug: String = _
+
+  @BeanProperty
+  @ManyToOne(fetch=FetchType.LAZY)
+  @JoinColumn(name="parent_id")
+  var parent: Node =_
+
+  @BeanProperty
   @OneToMany(mappedBy = "node", cascade = Array(CascadeType.ALL))
   var attributes: java.util.List[Attribute[_]] = new util.ArrayList[Attribute[_]]()
 

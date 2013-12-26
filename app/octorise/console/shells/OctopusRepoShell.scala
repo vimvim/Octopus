@@ -43,7 +43,7 @@ abstract class OctopusRepoShell extends BaseShell {
    * @param typeName        Node type
    * @param initClosure     Initialize function
    */
-  def create(typeName:String, initClosure: Closure):Node = {
+  def create(typeName:String, initClosure: Closure[AnyRef]):Node = {
 
     typesRegister.getNodeType(typeName) match {
 
@@ -72,15 +72,15 @@ abstract class OctopusRepoShell extends BaseShell {
    * @param editClosure   Closure
    */
 
-  def edit(slug:String, editClosure: Closure):Node = {
+  def edit(slug:String, editClosure: Closure[AnyRef]):Node = {
 
     val currentNode = getProperty("node").asInstanceOf[Node]
 
-    nodeApiFacade.findBySlug(currentNode, slug, {(node, service, repo)=>
+    nodeApiFacade.findBySlug[Node](currentNode, slug, {(node, service, repo)=>
 
       editClosure.setDelegate(node)
 
-      service.update({
+      service.update(node, {
         node=>
           editClosure.run()
       })

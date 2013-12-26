@@ -90,6 +90,22 @@ abstract class AbstractNodesRepo[T <: Node: Manifest](val entityClass: Class[T])
   //  entityManager.createQuery("From User", classOf[T]).getResultList.toList
   // }
 
+  def findBySlug(parent:Node, slug: String): Option[T] = {
+
+    val entityName = entityClass.getSimpleName
+
+    val query = entityManager.createQuery("SELECT entity FROM "+entityName+" WHERE parent=:parent AND slug=:slug")
+    query.setParameter("parent", parent)
+    query.setParameter("slug", slug)
+
+    val res = query.getResultList
+    if (res.size()>0) {
+      Some(res.get(0).asInstanceOf[T])
+    } else {
+      None
+    }
+  }
+
   def findOneBySchemaAttrValue[VT: ClassTag](schemaName: String, attrName: String, value: VT): Option[T] = {
 
     def find(schemaRef: SchemaRef, attrName: String, attrType: String, value: VT): Option[T] = {

@@ -32,6 +32,19 @@ abstract class AbstractNodeService[T <:Node] extends NodeService[T] {
     entity
   }
 
+  def update(node:T, updater:(T) => Unit):T = {
+
+    node.beginEdit(schemasRegistry, schemaRefService)
+
+    updater(node)
+
+    node.endEdit()
+
+    repo().save(node)
+
+    node
+  }
+
   protected def createEntity(): T
 
 
