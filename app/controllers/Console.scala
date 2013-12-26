@@ -18,6 +18,7 @@ import play.api.libs.iteratee.{Enumerator, Iteratee}
 import play.api.Routes
 
 import org.springframework.beans.factory.annotation.{Qualifier, Autowired}
+import org.springframework.context.annotation.Lazy
 
 import octorise.repo.octopus.models.User
 import octorise.console._
@@ -26,10 +27,12 @@ import octorise.console.CreateSession
 import octorise.console.SessionCommand
 import octorise.console.SessionClosed
 
+
 /**
  *
  */
 @org.springframework.stereotype.Controller
+@Lazy
 class Console extends Controller with Secured {
 
   @Autowired

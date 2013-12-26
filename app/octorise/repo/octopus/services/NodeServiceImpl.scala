@@ -4,15 +4,15 @@ import org.springframework.stereotype.{Component, Service}
 import org.springframework.beans.factory.annotation.{Qualifier, Autowired}
 
 import octorise.repo.octopus.models.Node
-import octorise.repo.octopus.repositories.{NodesRepoImpl, NodesRepo}
+import octorise.repo.octopus.repositories.NodesRepo
 import octorise.repo.octopus.schema.NodeType
 
 
 @Component("nodeType.Node")
-class BaseNodeType(
+class BaseNodeType @Autowired()(
 
   @Autowired @Qualifier("nodesRepo")
-  repo: NodesRepoImpl
+  repo: NodesRepo[Node]
 
 ) extends NodeType[Node]("node", null, null, repo)
 

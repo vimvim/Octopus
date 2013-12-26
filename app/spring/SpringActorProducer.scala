@@ -3,10 +3,15 @@ package spring
 import akka.actor.{Actor, IndirectActorProducer}
 
 import scala.Predef._
-import scala.collection.mutable.ListBuffer
 
 /**
  * Akka Spring integration for AKKA 2.2
+ * This is special AKKA Actor producer which is able to create Actor using Spring content.
+ *
+ * Calling flow:
+ *    - Client call SpringAkka or request Actor described by SpringAkkaConfig configuration
+ *    - SpringAkka call Akka system and specify custom AKKA producer ( SpringActorProducer )
+ *    - Akka system call SpringActorProducer which in turns call Spring content and get Actor instance
  */
 class SpringActorProducer(val actorClass: Class[_ <: Actor], val beanName: String, val beanArguments:java.util.List[_] = null) extends IndirectActorProducer {
 
@@ -25,6 +30,9 @@ class SpringActorProducer(val actorClass: Class[_ <: Actor], val beanName: Strin
       }
 
     } else {
+
+      val appName = SpringContextHolder.getContext.getApplicationName
+      val haveDefinition = SpringContextHolder.getContext.containsBeanDefinition("ConsoleSessionsManager.Actor")
 
       SpringContextHolder.getContext.getBean(actorClass)
     }

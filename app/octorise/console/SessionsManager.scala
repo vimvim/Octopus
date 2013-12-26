@@ -12,13 +12,15 @@ import play.api.libs.iteratee.Concurrent.Channel
 import play.libs.Akka
 
 import org.springframework.stereotype.Component
-import org.springframework.context.annotation.Lazy
+import org.springframework.context.annotation.{Scope, Lazy}
+
 
 
 /**
  * Manage sessions and session handlers.
  */
 @Component("ConsoleSessionsManager.Actor")
+@Scope("prototype")
 @Lazy
 class SessionsManager extends Actor {
 

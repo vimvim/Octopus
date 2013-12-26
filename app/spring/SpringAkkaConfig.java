@@ -3,7 +3,6 @@ package spring;
 import java.util.ArrayList;
 import java.util.List;
 
-import octorise.console.SessionsManager;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Lazy;
@@ -18,6 +17,8 @@ import play.libs.Akka;
 import actors.FileBatchLoader;
 import actors.TopsyTweetsParser;
 
+import octorise.console.SessionsManager;
+
 /**
  *
  */
@@ -25,6 +26,7 @@ import actors.TopsyTweetsParser;
 public class SpringAkkaConfig {
 
     @Bean
+    @Lazy
     public ActorSystem actorSystem() {
         return Akka.system();
     }

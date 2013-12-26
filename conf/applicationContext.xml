@@ -21,7 +21,7 @@
     <context:load-time-weaver weaver-class="org.springframework.instrument.classloading.InstrumentationLoadTimeWeaver" />
     -->
 
-    <context:component-scan base-package="controllers, octorise.repo.octopus.services, octorise.repo.octopus.repositories, models, ui, octorise.repo.octopus.schema, spring, actors, viewmodels" />
+    <context:component-scan base-package="controllers, octorise, models, ui, spring, actors, viewmodels" />
 
     <bean class="spring.SpringAkkaConfig" />
 
@@ -111,6 +111,15 @@
                 </bean>
             </list>
         </property>
+    </bean>
+
+    <bean id="nodeTypesRegistry" class="octorise.repo.octopus.schema.NodeTypesRegister">
+        <constructor-arg>
+            <list>
+                <ref bean="nodeType.Node" />
+                <ref bean="nodeType.Content" />
+            </list>
+        </constructor-arg>
     </bean>
 
     <!--

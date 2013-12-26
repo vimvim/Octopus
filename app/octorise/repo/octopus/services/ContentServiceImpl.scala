@@ -10,7 +10,7 @@ import octorise.repo.octopus.schema.NodeType
 
 
 @Component("nodeType.Content")
-class ContentNodeType(
+class ContentNodeType @Autowired()(
 
   @Autowired @Qualifier("nodeType.Node")
   baseType: NodeType[Node],
