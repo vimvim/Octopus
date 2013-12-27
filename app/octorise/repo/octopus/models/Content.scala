@@ -25,4 +25,6 @@ class Content extends Node {
 //  @JoinTable(name="subcontent")
 //  var subcontent: java.util.Set[SchemaRef] = new java.util.LinkedHashSet[SchemaRef]()
 
+  override def toString = s" $id Content $slug $name "
+
 }

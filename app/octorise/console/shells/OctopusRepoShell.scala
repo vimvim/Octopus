@@ -1,12 +1,21 @@
 package octorise.console.shells
 
-import groovy.lang.Closure
-import org.springframework.beans.factory.annotation.{Autowired, Configurable}
+import org.springframework.beans.factory.annotation.{Qualifier, Autowired, Configurable}
+import org.springframework.transaction.{TransactionDefinition, PlatformTransactionManager}
+import org.springframework.transaction.support.DefaultTransactionDefinition
+
+import groovy.lang.{MissingPropertyException, Closure}
+
+import spring.SpringContextHolder
 
 import octorise.repo.octopus.schema.NodeTypesRegister
 import octorise.repo.octopus.models.Node
 import octorise.repo.octopus.NodeApiFacade
 import octorise.repo.octopus.services.NodeService
+import octorise.repo.octopus.repositories.NodesRepo
+
+import octorise.console.OpenObjectShell
+
 
 /**
  * Shell allow to work with the nodes in the octopus repository.
@@ -21,6 +30,10 @@ abstract class OctopusRepoShell extends BaseShell {
   @Autowired
   var nodeApiFacade:NodeApiFacade =_
 
+  @Autowired
+  @Qualifier("nodesRepo")
+  var nodesRepo:NodesRepo[Node] =_
+
   /**
    * Print shell info
    */
@@ -29,12 +42,77 @@ abstract class OctopusRepoShell extends BaseShell {
   }
 
   /**
+   * Will list nodes in the current scope.
+   */
+  def list(): Unit = {
+
+    val nodes = nodesRepo.findByParent(getCurrentNode)
+    nodes.foreach({
+      node=>
+        println(s"  $node")
+    })
+  }
+
+  /**
+   * List nodes of the specified type in the current scope.
+   *
+   * @param typeName      Node type name
+   */
+  def list(typeName:String): Unit = {
+
+    typesRegister.getNodeType[Node](typeName) match {
+
+      case Some(nodeType) =>
+
+        val nodes = nodeType.repo.findByParent(getCurrentNode)
+        nodes.foreach({
+          node=>
+            println(s"  $node")
+        })
+
+      case None =>
+        println(s"Node type is not found: $typeName")
+
+    }
+  }
+
+  /**
+   * Delete by id
+   *
+   * @param id        Id of the target node
+   */
+  def delete(id:Int): Unit = {
+
+
+
+    println(s"Delete node with id: $id")
+  }
+
+  /**
+   * Delete by Slug
+   *
+   * @param slug      Slug of the target node
+   */
+  def delete(slug:String): Unit = {
+    println(s"Delete node with slug: $slug")
+  }
+
+  /**
    * Open specified node
    *
    * @param slug    Node slug
    */
   def open(slug:String): Unit = {
-    println("Will open node")
+
+    nodesRepo.findBySlug(getCurrentNode, slug) match {
+
+      case Some(node) =>
+        setProperty("node", node)
+        delegateCommand(OpenObjectShell(node.slug, node.getClass))
+
+      case None =>
+        println(s"Node is not found: $slug ")
+    }
   }
 
   /**
@@ -45,17 +123,29 @@ abstract class OctopusRepoShell extends BaseShell {
    */
   def create(typeName:String, initClosure: Closure[AnyRef]):Node = {
 
-    typesRegister.getNodeType(typeName) match {
+    typesRegister.getNodeType[Node](typeName) match {
 
       case Some(nodeType) =>
+
+        val transactionManager = SpringContextHolder.getContext.getBean(classOf[PlatformTransactionManager])
+        val transactionDef = new DefaultTransactionDefinition()
+        transactionDef.setName("SomeTxName")
+        transactionDef.setPropagationBehavior(TransactionDefinition.PROPAGATION_REQUIRED)
+
+        val transactionStatus = transactionManager.getTransaction(transactionDef)
 
         // nodeType.repo.findBySlug()
         val node = nodeType.service.create({
           node=>
+
+            node.setParent(getCurrentNode)
+
             initClosure.setDelegate(node)
             initClosure.setResolveStrategy(Closure.DELEGATE_ONLY)
             initClosure.run()
         })
+
+        transactionManager.commit(transactionStatus)
 
         println(s"Node created: $node")
         node.asInstanceOf[Node]
@@ -75,9 +165,7 @@ abstract class OctopusRepoShell extends BaseShell {
 
   def edit(slug:String, editClosure: Closure[AnyRef]):Node = {
 
-    val currentNode = getProperty("node").asInstanceOf[Node]
-
-    nodeApiFacade.findBySlug[Node](currentNode, slug, {(node, service, repo)=>
+    nodeApiFacade.findBySlug[Node](getCurrentNode, slug, {(node, service, repo)=>
 
       editClosure.setDelegate(node)
       editClosure.setResolveStrategy(Closure.DELEGATE_ONLY)
@@ -106,5 +194,15 @@ abstract class OctopusRepoShell extends BaseShell {
   def mount(slug:String, repoName:String) = {
 
   }
+
+  private def getCurrentNode:Node = {
+
+    try {
+      getProperty("node").asInstanceOf[Node]
+    } catch {
+      case e: MissingPropertyException => null
+    }
+  }
+
 
 }

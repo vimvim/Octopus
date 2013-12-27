@@ -3,6 +3,7 @@ package octorise.repo.octopus.services
 import org.springframework.beans.factory.annotation.{Qualifier, Autowired}
 import octorise.repo.octopus.models.Node
 import octorise.repo.octopus.schema.SchemasRegistry
+import org.springframework.transaction.interceptor.TransactionAspectSupport
 
 /**
  *
@@ -19,6 +20,9 @@ abstract class AbstractNodeService[T <:Node] extends NodeService[T] {
 
   def create(initializer:(T) => Unit): T = {
 
+    // TODO: For debugging only
+    // val transactionStatus = TransactionAspectSupport.currentTransactionStatus()
+
     val entity = createEntity()
 
     entity.beginEdit(schemasRegistry, schemaRefService)
@@ -33,6 +37,9 @@ abstract class AbstractNodeService[T <:Node] extends NodeService[T] {
   }
 
   def update(node:T, updater:(T) => Unit):T = {
+
+    // TODO: For debugging only
+    // val transactionStatus = TransactionAspectSupport.currentTransactionStatus()
 
     node.beginEdit(schemasRegistry, schemaRefService)
 

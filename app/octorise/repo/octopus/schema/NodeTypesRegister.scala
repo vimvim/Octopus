@@ -53,8 +53,8 @@ class NodeTypesRegister(types:java.util.List[NodeType[_]]) {
     None
   }
 
-  def getNodeType(typeName:String):Option[NodeType[_]] = {
-    typesByName.get(typeName)
+  def getNodeType[T <: Node](typeName:String):Option[NodeType[T]] = {
+    typesByName.get(typeName).asInstanceOf[Option[NodeType[T]]]
   }
 
 }

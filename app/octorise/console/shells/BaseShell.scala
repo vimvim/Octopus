@@ -16,7 +16,7 @@ abstract class BaseShell extends Script {
     delegateCommand(new ReturnShell)
   }
 
-  private def delegateCommand(cmd:DelegatedCommand) {
+  protected def delegateCommand(cmd:DelegatedCommand) {
 
     val binding = getBinding
 

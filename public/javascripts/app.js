@@ -1,6 +1,9 @@
 
 $( document ).ready(function() {
 
+    var that = this;
+    that.prompt = "";
+
     var wsUrl = jsRoutes.controllers.Console.ws().webSocketURL();
 
     var connection = new WebSocket(wsUrl);
@@ -22,7 +25,10 @@ $( document ).ready(function() {
 
         var obj = JSON.parse(e.data);
 
-        $("#console-display ul").append("<li>"+obj.prompt+" # "+obj.output+"</li>");
+        that.prompt = obj.prompt;
+
+        var output = obj.output.replace(/\n/g, '<br/>');
+        $("#console-display ul").append("<li>"+output+"</li>");
 
         console.log('Server: ', obj);
     };
@@ -35,6 +41,10 @@ $( document ).ready(function() {
             command: "execute",
             data: text
         }));
+
+        $("#console-input").val("");
+
+        $("#console-display ul").append("<li>"+that.prompt+" # "+text+"</li>");
 
         e.preventDefault();
         return true;

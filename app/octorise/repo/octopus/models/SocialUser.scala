@@ -13,6 +13,6 @@ import javax.persistence.{PrimaryKeyJoinColumn, Table, Entity}
 @PrimaryKeyJoinColumn(name = "id", referencedColumnName = "id")
 class SocialUser extends Node {
 
-
+  override def toString = s" $id SocialUser "
 
 }

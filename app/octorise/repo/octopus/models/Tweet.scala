@@ -25,5 +25,5 @@ class Tweet extends Sentiment {
   @Column(name="tweet_id")
   var tweetId: String = _
 
-
+  override def toString = s" $id Tweet "
 }

@@ -61,6 +61,38 @@ abstract class AbstractNodesRepo[T <: Node: Manifest](val entityClass: Class[T])
     //res.asScala.asInstanceOf[List[T]]
   }
 
+  def findByParent(node:Node, offset:Int = 0, limit:Int = 50):List[T] = {
+
+    val entityName = entityClass.getSimpleName
+
+    if (node==null) {
+
+      val query = entityManager.createQuery("SELECT entity FROM "+entityName+" entity WHERE parent is null ")
+      query.setFirstResult(offset)
+      query.setMaxResults(limit)
+
+      val res = query.getResultList.toList
+
+      val res2 = res.asInstanceOf[List[T]]
+
+      res2
+    } else {
+
+      val query = entityManager.createQuery("SELECT entity FROM "+entityName+" entity WHERE parent=:parent ")
+      query.setParameter("parent", node)
+      query.setFirstResult(offset)
+      query.setMaxResults(limit)
+
+      val res = query.getResultList.toList
+
+      val res2 = res.asInstanceOf[List[T]]
+
+      res2
+    }
+
+
+  }
+
   def totalCount: Long = {
 
     val entityName = entityClass.getSimpleName

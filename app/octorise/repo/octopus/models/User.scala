@@ -20,5 +20,5 @@ class User(_username: String) extends Node {
 
   def this() = this (null)
 
-  override def toString = id + " = " + username
+  override def toString = s" $id User $username "
 }
