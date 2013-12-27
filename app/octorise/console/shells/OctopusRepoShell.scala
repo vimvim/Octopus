@@ -127,12 +127,12 @@ abstract class OctopusRepoShell extends BaseShell {
 
       case Some(nodeType) =>
 
-        val transactionManager = SpringContextHolder.getContext.getBean(classOf[PlatformTransactionManager])
-        val transactionDef = new DefaultTransactionDefinition()
-        transactionDef.setName("SomeTxName")
-        transactionDef.setPropagationBehavior(TransactionDefinition.PROPAGATION_REQUIRED)
+        // val transactionManager = SpringContextHolder.getContext.getBean(classOf[PlatformTransactionManager])
+        // val transactionDef = new DefaultTransactionDefinition()
+        // transactionDef.setName("SomeTxName")
+        // transactionDef.setPropagationBehavior(TransactionDefinition.PROPAGATION_REQUIRED)
 
-        val transactionStatus = transactionManager.getTransaction(transactionDef)
+        // val transactionStatus = transactionManager.getTransaction(transactionDef)
 
         // nodeType.repo.findBySlug()
         val node = nodeType.service.create({
@@ -145,7 +145,7 @@ abstract class OctopusRepoShell extends BaseShell {
             initClosure.run()
         })
 
-        transactionManager.commit(transactionStatus)
+        // transactionManager.commit(transactionStatus)
 
         println(s"Node created: $node")
         node.asInstanceOf[Node]

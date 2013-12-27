@@ -20,6 +20,7 @@ import octorise.repo.octopus.models.{SchemaRef, Node, Attribute}
  *
  */
 // abstract class AbstractNodesRepo[T <: Node](implicit m: Manifest[T]) extends NodesRepo[T] {
+@Transactional(readOnly = false, propagation = Propagation.REQUIRED)
 abstract class AbstractNodesRepo[T <: Node: Manifest](val entityClass: Class[T]) extends NodesRepo[T] {
 
   @Autowired

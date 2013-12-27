@@ -4,10 +4,12 @@ import org.springframework.beans.factory.annotation.{Qualifier, Autowired}
 import octorise.repo.octopus.models.Node
 import octorise.repo.octopus.schema.SchemasRegistry
 import org.springframework.transaction.interceptor.TransactionAspectSupport
+import org.springframework.transaction.annotation.{Propagation, Transactional}
 
 /**
  *
  */
+@Transactional(readOnly = false, propagation = Propagation.REQUIRED)
 abstract class AbstractNodeService[T <:Node] extends NodeService[T] {
 
   @Autowired
@@ -21,7 +23,7 @@ abstract class AbstractNodeService[T <:Node] extends NodeService[T] {
   def create(initializer:(T) => Unit): T = {
 
     // TODO: For debugging only
-    // val transactionStatus = TransactionAspectSupport.currentTransactionStatus()
+    val transactionStatus = TransactionAspectSupport.currentTransactionStatus()
 
     val entity = createEntity()
 
