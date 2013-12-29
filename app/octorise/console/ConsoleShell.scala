@@ -6,7 +6,13 @@ import org.codehaus.groovy.control.CompilerConfiguration
 import org.codehaus.groovy.runtime.InvokerHelper
 import groovy.lang.{MissingPropertyException, MissingMethodException, GroovyShell, Binding}
 
-import octorise.console.shells.{Result, ErrorResult, SuccessResult, RootShell}
+import octorise.console.shells._
+import octorise.repo.octopus.models.Node
+import octorise.console.shells.SuccessResult
+import octorise.console.OpenSubShell
+import octorise.console.OpenObjectShell
+import octorise.console.shells.ErrorResult
+import octorise.console.ReturnShell
 
 
 /**
@@ -107,12 +113,18 @@ class ConsoleShell {
 
         command match {
 
-          case OpenSubShell(name, subShellClass) =>
+          case OpenObjectShell(name, objectClass) =>
 
             subShellLabels = name::subShellLabels
-            shellClasses = subShellClass::shellClasses
+            objectClass match {
+              case node:Node => openSubShell(name, classOf[OctopusRepoShell])
+            }
 
-            groovyShell = null
+            execDelegatedCommands(commands.tail)
+
+          case OpenSubShell(name, subShellClass) =>
+
+            openSubShell(name, subShellClass)
 
             execDelegatedCommands(commands.tail)
 
@@ -132,6 +144,14 @@ class ConsoleShell {
 
       case List() => stopProcessing(commands)
     }
+  }
+
+  private def openSubShell[T <: BaseShell](name:String, subShellClass:Class[T]) = {
+
+    subShellLabels = name::subShellLabels
+    shellClasses = subShellClass::shellClasses
+
+    groovyShell = null
   }
 
   /**

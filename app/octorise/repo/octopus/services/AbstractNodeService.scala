@@ -54,6 +54,12 @@ abstract class AbstractNodeService[T <:Node] extends NodeService[T] {
     node
   }
 
+  def delete(node:T):Unit = {
+
+    repo().delete(node)
+
+  }
+
   protected def createEntity(): T
 
 

@@ -14,7 +14,7 @@ class BaseNodeType @Autowired()(
   @Autowired @Qualifier("nodesRepo")
   repo: NodesRepo[Node]
 
-) extends NodeType[Node]("node", null, null, repo)
+) extends NodeType[Node](classOf[Node], "node", null, null, repo)
 
 
 

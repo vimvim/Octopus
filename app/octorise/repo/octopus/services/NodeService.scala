@@ -12,6 +12,8 @@ trait NodeService[ T <: Node] {
 
   def update(node:T, initializer:(T) => Unit):T
 
+  def delete(node:T):Unit
+
   def repo(): NodesRepo[T]
 
 }

@@ -1,37 +1,39 @@
 package spring
 
-import javax.persistence.EntityManager
+import org.springframework.transaction.support.DefaultTransactionDefinition
+import org.springframework.transaction.{TransactionDefinition, PlatformTransactionManager}
 
 /**
  *
- * Can be used as are wrapper in the Controllers action handlers if there is no another way
- * will be found ( annotation based intercept of the actions as JPA plugin doing. )
+ * Can be used as are wrapper for Spring JPA transaction
  *
  */
 object Transaction {
 
-  /*
-  def apply [A] (action: () => A): A = {
+  def apply[T] (action: => T): T = {
 
-    val em = SpringContextHolder.getContext.getBean(classOf[EntityManager])
-    val transaction = em.getTransaction
+    val transactionManager = SpringContextHolder.getContext.getBean(classOf[PlatformTransactionManager])
+    val transactionDef = new DefaultTransactionDefinition()
+    transactionDef.setName("SomeTxName")
+    transactionDef.setPropagationBehavior(TransactionDefinition.PROPAGATION_REQUIRED)
 
-    transaction.begin ()
     try {
-      val result = action
-      if (transaction.isActive) // transaction may already be explicitly rolled back
-      transaction.commit ()
-      action
-    }
-    catch {
-      case exception: Throwable =>
-        if (transaction! = null && transaction.isActive)
-          Transaction.Rollback ()
-        throw exception
-    }
-    finally
-      em.close ()
-  }
-  */
 
+      val retVal = action
+
+      val transactionStatus = transactionManager.getTransaction(transactionDef)
+      transactionManager.commit(transactionStatus)
+
+      retVal
+
+    } catch {
+
+      case exception: Throwable =>
+        val transactionStatus = transactionManager.getTransaction(transactionDef)
+        transactionManager.rollback(transactionStatus)
+
+        throw exception
+    } finally {
+    }
+  }
 }

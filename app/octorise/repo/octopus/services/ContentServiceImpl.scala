@@ -21,7 +21,7 @@ class ContentNodeType @Autowired()(
   @Autowired @Qualifier("contentRepo")
   repo: ContentRepo
 
-) extends NodeType[Content]("content", baseType, service, repo)
+) extends NodeType[Content](classOf[Content], "content", baseType, service, repo)
 
 
 

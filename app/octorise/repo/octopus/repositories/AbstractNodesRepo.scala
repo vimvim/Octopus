@@ -39,6 +39,10 @@ abstract class AbstractNodesRepo[T <: Node: Manifest](val entityClass: Class[T])
     case _ => entityManager.merge(user)
   }
 
+  def delete(entity: T): Unit = {
+    entityManager.remove(entity)
+  }
+
   @Transactional(readOnly = false, propagation = Propagation.REQUIRED)
   def fetch(offset:Int, limit:Int):List[T] = {
 

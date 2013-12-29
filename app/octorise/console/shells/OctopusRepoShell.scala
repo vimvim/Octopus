@@ -6,7 +6,7 @@ import org.springframework.transaction.support.DefaultTransactionDefinition
 
 import groovy.lang.{MissingPropertyException, Closure}
 
-import spring.SpringContextHolder
+import spring.{Transaction, SpringContextHolder}
 
 import octorise.repo.octopus.schema.NodeTypesRegister
 import octorise.repo.octopus.models.Node
@@ -24,7 +24,6 @@ import octorise.console.OpenObjectShell
 abstract class OctopusRepoShell extends BaseShell {
 
   @Autowired
-  // @Qualifier("tweetService")
   var typesRegister:NodeTypesRegister = _
 
   @Autowired
@@ -83,9 +82,15 @@ abstract class OctopusRepoShell extends BaseShell {
    */
   def delete(id:Int): Unit = {
 
-
-
-    println(s"Delete node with id: $id")
+    Transaction {
+      nodeApiFacade.findById[Node](id, {
+        (node, service, repo)=>
+          service.delete(node)
+      }) match {
+        case Some(node) =>
+        case None => println(s"Node :$id is not found")
+      }
+    }
   }
 
   /**
@@ -93,8 +98,17 @@ abstract class OctopusRepoShell extends BaseShell {
    *
    * @param slug      Slug of the target node
    */
-  def delete(slug:String): Unit = {
-    println(s"Delete node with slug: $slug")
+  def delete(slug: String): Unit = {
+
+    Transaction {
+      nodeApiFacade.findBySlug[Node](getCurrentNode, slug, {
+        (node, service, repo) =>
+          service.delete(node)
+      }) match {
+        case Some(node) =>
+        case None => println(s"Node :$slug is not found")
+      }
+    }
   }
 
   /**
@@ -121,38 +135,30 @@ abstract class OctopusRepoShell extends BaseShell {
    * @param typeName        Node type
    * @param initClosure     Initialize function
    */
-  def create(typeName:String, initClosure: Closure[AnyRef]):Node = {
+  def create(typeName: String, initClosure: Closure[AnyRef]): Node = {
 
-    typesRegister.getNodeType[Node](typeName) match {
+    Transaction {
+      typesRegister.getNodeType[Node](typeName) match {
 
-      case Some(nodeType) =>
+        case Some(nodeType) =>
 
-        // val transactionManager = SpringContextHolder.getContext.getBean(classOf[PlatformTransactionManager])
-        // val transactionDef = new DefaultTransactionDefinition()
-        // transactionDef.setName("SomeTxName")
-        // transactionDef.setPropagationBehavior(TransactionDefinition.PROPAGATION_REQUIRED)
+          val node = nodeType.service.create({
+            node =>
 
-        // val transactionStatus = transactionManager.getTransaction(transactionDef)
+              node.setParent(getCurrentNode)
 
-        // nodeType.repo.findBySlug()
-        val node = nodeType.service.create({
-          node=>
+              initClosure.setDelegate(node)
+              initClosure.setResolveStrategy(Closure.DELEGATE_ONLY)
+              initClosure.run()
+          })
 
-            node.setParent(getCurrentNode)
+          println(s"Node created: $node")
+          node.asInstanceOf[Node]
 
-            initClosure.setDelegate(node)
-            initClosure.setResolveStrategy(Closure.DELEGATE_ONLY)
-            initClosure.run()
-        })
-
-        // transactionManager.commit(transactionStatus)
-
-        println(s"Node created: $node")
-        node.asInstanceOf[Node]
-
-      case None =>
-        println(s"Node type:$typeName is not found")
-        null
+        case None =>
+          println(s"Node type:$typeName is not found")
+          null
+      }
     }
   }
 
@@ -163,25 +169,28 @@ abstract class OctopusRepoShell extends BaseShell {
    * @param editClosure   Closure
    */
 
-  def edit(slug:String, editClosure: Closure[AnyRef]):Node = {
+  def edit(slug: String, editClosure: Closure[AnyRef]): Node = {
 
-    nodeApiFacade.findBySlug[Node](getCurrentNode, slug, {(node, service, repo)=>
+    Transaction {
+      nodeApiFacade.findBySlug[Node](getCurrentNode, slug, {
+        (node, service, repo) =>
 
-      editClosure.setDelegate(node)
-      editClosure.setResolveStrategy(Closure.DELEGATE_ONLY)
+          editClosure.setDelegate(node)
+          editClosure.setResolveStrategy(Closure.DELEGATE_ONLY)
 
-      service.update(node, {
-        node=>
-          editClosure.run()
-      })
+          service.update(node, {
+            node =>
+              editClosure.run()
+          })
 
-    }) match {
+      }) match {
 
-      case Some(node) => node
+        case Some(node) => node
 
-      case None =>
-        println(s"Node :$slug is not found")
-        null
+        case None =>
+          println(s"Node :$slug is not found")
+          null
+      }
     }
   }
 

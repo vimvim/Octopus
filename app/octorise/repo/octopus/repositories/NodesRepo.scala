@@ -11,6 +11,8 @@ trait NodesRepo[T <: Node] {
 
   def save(entity: T): Unit
 
+  def delete(entity: T): Unit
+
   def find(id: Int): Option[T]
 
   def findBySlug(node:Node, slug: String): Option[T]

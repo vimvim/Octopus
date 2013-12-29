@@ -9,6 +9,7 @@ import octorise.repo.octopus.repositories.NodesRepo
  *
  */
 class NodeType[T <: Node] (
+   val nodeClass: Class[T],
    val name: String,
    val baseType: NodeType[_],
    val service: NodeService[T],

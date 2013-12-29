@@ -16,17 +16,6 @@ class NodeTypesRegister(types:java.util.List[NodeType[_]]) {
 
   var typesByClass = Map[Class[_], NodeType[_]]()
 
-
-  // TODO: Temporary solution. Refactor later.
-  // registerNodeTypeBean("nodeType.Node")
-  // registerNodeTypeBean("nodeType.Content")
-
-  /*
-  def registerType[T <: Node](typeName:String, extendType:String, applicableSchemas: Set[SchemaDescriptor], service: NodeService[T], repo: NodesRepo[T]) = {
-
-  }
-  */
-
   types.toArray.foreach({nodeType=>
     registerNodeType(nodeType.asInstanceOf[NodeType[_]])
   })
@@ -37,20 +26,34 @@ class NodeTypesRegister(types:java.util.List[NodeType[_]]) {
 
     typesByName.get(nodeType.name) match {
       case Some(foundType) => throw new Exception(s"Type already registered: $typeName ")
-      case None =>
-        typesByName = typesByName + (typeName -> nodeType)
+      case None => typesByName = typesByName + (typeName -> nodeType)
+    }
+
+    val nodeClass = nodeType.nodeClass
+
+    typesByClass.get(nodeClass) match {
+      case Some(foundType) => throw new Exception(s"Type already registered: $nodeClass ")
+      case None => typesByClass = typesByClass + (nodeClass -> nodeType)
     }
   }
 
-  /*
-  def registerNodeTypeBean(beanTypeName:String) {
-    val nodeType = SpringContextHolder.getContext.getBean("nodeType.Content")
-    registerNodeType(nodeType.asInstanceOf[NodeType[_]])
-  }
-  */
-
   def getNodeType[T <: Node](node:T):Option[NodeType[T]] = {
-    None
+
+    def findNodeType(nodeClass: Class[_]):Option[NodeType[T]] = {
+
+      typesByClass.get(nodeClass) match {
+        case Some(nodeType) => Some(nodeType.asInstanceOf[NodeType[T]])
+        case None =>
+          val superClass = nodeClass.getSuperclass
+          if (superClass.equals(classOf[Object])) {
+            None
+          } else {
+            findNodeType(superClass)
+          }
+      }
+    }
+
+    findNodeType(node.getClass)
   }
 
   def getNodeType[T <: Node](typeName:String):Option[NodeType[T]] = {
