@@ -9,10 +9,7 @@ import groovy.lang.{MissingPropertyException, MissingMethodException, GroovyShel
 import octorise.console.shells._
 import octorise.repo.octopus.models.Node
 import octorise.console.shells.SuccessResult
-import octorise.console.OpenSubShell
-import octorise.console.OpenObjectShell
 import octorise.console.shells.ErrorResult
-import octorise.console.ReturnShell
 
 
 /**
@@ -20,9 +17,10 @@ import octorise.console.ReturnShell
  */
 class ConsoleShell {
 
-  var shellClasses:List[Class[_]] = List(classOf[RootShell])
+  // var shellClasses:List[Class[_]] = List(classOf[RootShell])
+  var shellRecords:List[ShellRecord[_]] = List(ShellRecord("octo", classOf[RootShell]))
 
-  var subShellLabels = List[String]("Octo")
+  // var subShellLabels = List[String]("octo")
 
   val outStream = new ByteArrayOutputStream()
 
@@ -42,7 +40,8 @@ class ConsoleShell {
    */
   def execute(cmd:String):Result = {
 
-    val shellClass = shellClasses.head
+    val shellRecord = shellRecords.head
+    val shellClass = shellRecord.shellClass
     val shellMetaClass = InvokerHelper.metaRegistry.getMetaClass(shellClass)
 
     if (groovyShell==null) {
@@ -51,6 +50,8 @@ class ConsoleShell {
       configuration.setScriptBaseClass(shellClass.getCanonicalName)
 
       groovyShell = new GroovyShell(shellClass.getClassLoader, bindings, configuration)
+
+      shellRecord.onOpenShell()
     }
 
     try {
@@ -63,7 +64,10 @@ class ConsoleShell {
 
       // groovyShell.evaluate(cmd)
 
-      new SuccessResult(prompt, output, execDelegatedCommands(this.delegatedCommands))
+      // Unhandled delegated commands will be passed to the upper level for handling
+      val commandsTail = execDelegatedCommands(this.delegatedCommands)
+
+      new SuccessResult(prompt, output, commandsTail)
 
     } catch {
 
@@ -81,7 +85,11 @@ class ConsoleShell {
    *
    * @return
    */
-  def prompt:String = subShellLabels.reverse.foldLeft("")((prompt,name) => s"$prompt/$name")
+  def prompt:String = shellRecords.reverse.foldLeft("")((prompt,record) => {
+    val label = record.label
+    s"$prompt/$label"
+  })
+
 
   /**
    * Handle script runtime error.
@@ -113,11 +121,29 @@ class ConsoleShell {
 
         command match {
 
-          case OpenObjectShell(name, objectClass) =>
+          case OpenObjectShell(name, obj) =>
 
-            subShellLabels = name::subShellLabels
-            objectClass match {
-              case node:Node => openSubShell(name, classOf[OctopusRepoShell])
+            // TODO: Matching object class -> shell class must be moved to the separate object
+            obj match {
+              case node:Node =>
+
+                def getCurrentNode = {
+
+                  try {
+                    bindings.getProperty("node")
+                  } catch {
+                    case e: MissingPropertyException => null
+                  }
+                }
+
+                openSubShell(name, classOf[OctopusRepoShell],
+                  onOpenShell = ()=>{
+                    bindings.setProperty("node", node)
+                  },
+                  onCloseShell = ()=>{
+                    bindings.setProperty("node", getCurrentNode)
+                  }
+                )
             }
 
             execDelegatedCommands(commands.tail)
@@ -130,8 +156,10 @@ class ConsoleShell {
 
           case ReturnShell() =>
 
-            subShellLabels = subShellLabels.tail
-            shellClasses = shellClasses.tail
+            val shellRecord = shellRecords.head
+            shellRecord.onCloseShell()
+
+            shellRecords = shellRecords.tail
 
             groovyShell = null
 
@@ -146,10 +174,9 @@ class ConsoleShell {
     }
   }
 
-  private def openSubShell[T <: BaseShell](name:String, subShellClass:Class[T]) = {
+  private def openSubShell[T <: BaseShell](name:String, subShellClass:Class[T], onOpenShell:()=>Unit = ()=>{}, onCloseShell:()=>Unit = ()=>{}) = {
 
-    subShellLabels = name::subShellLabels
-    shellClasses = subShellClass::shellClasses
+    shellRecords = ShellRecord(name, subShellClass, onOpenShell, onCloseShell)::shellRecords
 
     groovyShell = null
   }
@@ -180,7 +207,7 @@ class ConsoleShell {
   /**
    * Helper for converting stack trace to the string
    *
-   * @param e
+   * @param e   Exception
    * @return
    */
   private def fullExceptionText(e:Exception):String = {
