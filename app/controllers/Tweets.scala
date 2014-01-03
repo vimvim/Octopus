@@ -12,9 +12,9 @@ import org.springframework.transaction.support.DefaultTransactionDefinition
 
 import spring.SpringContextHolder
 
-import octorise.repo.octopus.models.Tweet
+import octorise.repo.octopus.models.{Node, Tweet}
 import octorise.viewmodel.ListPresenter
-import octorise.repo.octopus.repositories.TweetsRepo
+import octorise.repo.octopus.repositories.{NodesRepo, ContentRepo, TweetsRepo}
 
 
 case class Transactional[A](action: Action[A]) extends Action[A] {
@@ -76,5 +76,23 @@ class Tweets extends Controller  {
   def index2 = Action {
     Ok(views.html.index("Your new application is ready."))
   }
+
+  def index3 = Transactional { Action {
+
+    // This is for testing only
+    val contentRepo = SpringContextHolder.getContext.getBean("contentRepo", classOf[ContentRepo])
+    val nodesRepo = SpringContextHolder.getContext.getBean("nodesRepo", classOf[NodesRepo[Node]])
+
+    val node = nodesRepo.find(28336)
+    val content = contentRepo.find(28336)
+
+    val contents = contentRepo.findByParent(null)
+    val nodes = nodesRepo.findByParent(null)
+
+    val content2 = contentRepo.findBySlug(null, "test")
+    val node2 = nodesRepo.findBySlug(null, "test")
+
+    Ok(views.html.index("Your new application is ready."))
+  }}
 
 }

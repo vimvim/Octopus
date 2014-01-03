@@ -131,7 +131,7 @@ abstract class AbstractNodesRepo[T <: Node: Manifest](val entityClass: Class[T])
 
     val entityName = entityClass.getSimpleName
 
-    val query = entityManager.createQuery("SELECT entity FROM "+entityName+" entity WHERE parent=:parent AND slug=:slug")
+    val query = entityManager.createQuery("SELECT entity FROM "+entityName+" entity WHERE parent=:parent AND slug=:slug ")
     query.setParameter("parent", parent)
     query.setParameter("slug", slug)
 
