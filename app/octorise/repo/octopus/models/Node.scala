@@ -187,6 +187,10 @@ abstract class Node {
     }
   }
 
+  def attrs(schemaName: String):Map[String, Attribute] = {
+
+  }
+
   protected def findAttribute[T](schemaRef: SchemaRef, name: String): Option[Attribute[T]] ={
 
     val itr = attributes.iterator()
