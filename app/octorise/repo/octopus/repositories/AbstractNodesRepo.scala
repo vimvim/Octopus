@@ -43,7 +43,6 @@ abstract class AbstractNodesRepo[T <: Node: Manifest](val entityClass: Class[T])
     entityManager.remove(entity)
   }
 
-  @Transactional(readOnly = false, propagation = Propagation.REQUIRED)
   def fetch(offset:Int, limit:Int):List[T] = {
 
     // val transactionInfo = TransactionAspectSupport.currentTransactionInfo()
@@ -131,9 +130,25 @@ abstract class AbstractNodesRepo[T <: Node: Manifest](val entityClass: Class[T])
 
     val entityName = entityClass.getSimpleName
 
-    val query = entityManager.createQuery("SELECT entity FROM "+entityName+" entity WHERE parent=:parent AND slug=:slug ")
-    query.setParameter("parent", parent)
-    query.setParameter("slug", slug)
+    /*
+    val query1 = entityManager.createQuery("SELECT entity FROM "+entityName+" entity ")
+    val query2 = entityManager.createQuery("SELECT entity FROM "+entityName+" entity WHERE parent is null ")
+    val query3 = entityManager.createQuery("SELECT entity FROM "+entityName+" entity WHERE parent=:parent ")
+    */
+
+    if (parent==null) {
+      singleResultOf(s"SELECT entity FROM $entityName entity WHERE parent is null AND slug=:slug ", Map(("slug"->slug)))
+    } else {
+      singleResultOf(s"SELECT entity FROM $entityName entity WHERE parent=:parent AND slug=:slug ", Map(("slug"->slug), ("parent"->parent)))
+    }
+  }
+
+  private def singleResultOf(q:String, params:Map[String, _]): Option[T] = {
+
+    val query = entityManager.createQuery(q)
+    for(entry <- params) {
+      query.setParameter(entry._1, entry._2)
+    }
 
     val res = query.getResultList
     if (res.size()>0) {

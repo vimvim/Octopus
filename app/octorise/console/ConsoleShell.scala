@@ -127,7 +127,7 @@ class ConsoleShell {
             obj match {
               case node:Node =>
 
-                def getCurrentNode = {
+                val currentNode = {
 
                   try {
                     bindings.getProperty("node")
@@ -141,7 +141,7 @@ class ConsoleShell {
                     bindings.setProperty("node", node)
                   },
                   onCloseShell = ()=>{
-                    bindings.setProperty("node", getCurrentNode)
+                    bindings.setProperty("node", currentNode)
                   }
                 )
             }

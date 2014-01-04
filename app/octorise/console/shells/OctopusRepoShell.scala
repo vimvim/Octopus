@@ -41,6 +41,14 @@ abstract class OctopusRepoShell extends BaseShell {
   }
 
   /**
+   * Print info about current node
+   */
+  def node(): Unit = {
+    val node = getCurrentNode
+    println(s"Node: $node")
+  }
+
+  /**
    * Will list nodes in the current scope.
    */
   def list(): Unit = {
@@ -121,8 +129,7 @@ abstract class OctopusRepoShell extends BaseShell {
     nodesRepo.findBySlug(getCurrentNode, slug) match {
 
       case Some(node) =>
-        setProperty("node", node)
-        delegateCommand(OpenObjectShell(node.slug, node.getClass))
+        delegateCommand(OpenObjectShell(node.slug, node))
 
       case None =>
         println(s"Node is not found: $slug ")
