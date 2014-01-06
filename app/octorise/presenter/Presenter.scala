@@ -19,7 +19,7 @@ import octorise.repo.ContentResponse
 import octorise.presenter.RenderedContent
 import octorise.repo.RedirectResponse
 import octorise.presenter.PresentContent
-import org.springframework.beans.factory.annotation.Configurable
+import org.springframework.beans.factory.annotation.{Autowire, Configurable}
 
 
 /**
@@ -41,6 +41,9 @@ case class RenderTimeout(label:String) extends RenderResponse
  */
 @Configurable
 class Presenter extends Actor {
+
+  @Autowire
+  var renderingFacade:RenderingFacade = _
 
   def receive: Actor.Receive = {
 
@@ -94,7 +97,7 @@ class Presenter extends Actor {
         case Left(response) =>
 
           response match {
-            case redirectResponse:RedirectResponse => handleAnswer(redirectResponse.repository.get(redirectResponse.path))
+            case redirectResponse:RedirectResponse => handleAnswer(redirectResponse.repository.get(redirectResponse.location))
             case contentResponse:ContentResponse => Left(contentResponse)
           }
 
@@ -110,11 +113,6 @@ class Presenter extends Actor {
   }
 
   private def render(repository: Repository, label: String, content: ContentResponse): Either[RenderedContent, Future[RenderedContent]] = {
-
-    // TODO: Select presenter using content type/kind/...
-
-    val renderer:Renderer = null
-
-    renderer.render(repository, label, content.content)
+    renderingFacade.render(repository, label, content.content)
   }
 }

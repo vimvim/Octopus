@@ -1,12 +1,16 @@
 package octorise.presenter
 
 import scala.concurrent.Future
+import org.springframework.stereotype.Service
+
+import octorise.repo.octopus.models.TextContent
 import octorise.repo.Repository
 
 /**
- * Common interface to the content renderers
+ *
  */
-trait Renderer[T] {
+@Service("textRenderer")
+class TextRenderer extends Renderer[TextContent] {
 
   /**
    * Render passed content
@@ -16,5 +20,7 @@ trait Renderer[T] {
    * @param content         Content to render
    * @return
    */
-  def render(repository:Repository, label:String, content:T):Either[RenderedContent, Future[RenderedContent]]
+  def render(repository: Repository, label: String, content: TextContent): Either[RenderedContent, Future[RenderedContent]] = {
+    Left(RenderedContent(label, "", content.content))
+  }
 }

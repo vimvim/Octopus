@@ -18,16 +18,26 @@ import org.springframework.beans.factory.annotation.{Qualifier, Autowired}
 import octorise.repo.{Repository, RelativeLocation}
 import play.api.libs.concurrent.Akka
 import octorise.repo.octopus.ReferencedLocation
+import org.springframework.stereotype.Service
 
 /**
- * Renderer for compound content ( content which is consist of the several sub nodes )
+ * Renderer for structured content ( content which is consist of the several sub nodes )
  */
-class CompoundRenderer extends Renderer[Content] {
+@Service("structuredRenderer")
+class StructuredRenderer extends Renderer[Content] {
 
   @Autowired
   @Qualifier("presenter")
   var presenter: ActorRef =_
 
+  /**
+   * Render passed content
+   *
+   * @param repository      Repository to which content belongs
+   * @param label           Content label. Used for identifying content in pages and also in the render response
+   * @param content         Content to render
+   * @return
+   */
   def render(repository:Repository, label:String, content: Content): Either[RenderedContent, Future[RenderedContent]] = {
 
     // TODO: Think about storing schema name in the special attribute of the Content
@@ -65,6 +75,9 @@ class CompoundRenderer extends Renderer[Content] {
         val subContentRef = entry._2.getName
 
         // Tracer.log(s"Request subcontent:$subContentLabel url:$subContentUrl")
+
+        // TODO: Check attribute type here and dispatch presentation request only for attributes referenced to nodes.
+        // TODO: For simple type attributes - render in-place
 
         val renderingFuture = presenter ? PresentContent(subContentLabel, repository, ReferencedLocation(content, "content", subContentRef))
 
@@ -117,7 +130,7 @@ class CompoundRenderer extends Renderer[Content] {
 
     // Tracer.log(s"$label: Final rendering")
 
-    RenderedContent(label, "text", subContentMap.foldLeft(content.content) {
+    RenderedContent(label, "text", subContentMap.foldLeft("") {
       (data, entry) =>
 
         val contentLabel = entry._1
