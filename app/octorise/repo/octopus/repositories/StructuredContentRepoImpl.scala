@@ -3,13 +3,13 @@ package octorise.repo.octopus.repositories
 import org.springframework.stereotype.Repository
 import org.springframework.transaction.annotation.{Propagation, Transactional}
 
-import octorise.repo.octopus.models.Content
+import octorise.repo.octopus.models.StructuredContent
 
 /**
  *
  */
-@Repository("contentRepo")
+@Repository("structuredContentRepo")
 @Transactional(readOnly = false, propagation = Propagation.REQUIRED)
-abstract class ContentRepoImpl[ T<: Content] extends AbstractNodesRepo[T] with ContentRepo[T] {
+class StructuredContentRepoImpl extends ContentRepoImpl[StructuredContent] with StructuredContentRepo {
 
 }

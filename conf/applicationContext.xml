@@ -118,6 +118,8 @@
             <list>
                 <ref bean="nodeType.Node" />
                 <ref bean="nodeType.Content" />
+                <ref bean="nodeType.TextContent" />
+                <ref bean="nodeType.StructuredContent" />
             </list>
         </constructor-arg>
     </bean>

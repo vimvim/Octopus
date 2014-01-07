@@ -5,6 +5,6 @@ import octorise.repo.octopus.models.Content
 /**
  *
  */
-trait ContentRepo extends NodesRepo[Content] {
+trait ContentRepo[ T<: Content] extends NodesRepo[T] {
 
 }

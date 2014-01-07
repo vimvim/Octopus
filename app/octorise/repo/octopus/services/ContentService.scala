@@ -5,7 +5,7 @@ import octorise.repo.octopus.models.Content
 /**
  *
  */
-trait ContentService extends NodeService[Content]  {
+trait ContentService[ T<: Content ] extends NodeService[T]  {
 
 
 

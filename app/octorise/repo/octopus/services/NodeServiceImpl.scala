@@ -8,13 +8,7 @@ import octorise.repo.octopus.repositories.NodesRepo
 import octorise.repo.octopus.schema.NodeType
 
 
-@Component("nodeType.Node")
-class BaseNodeType @Autowired()(
 
-  @Autowired @Qualifier("nodesRepo")
-  repo: NodesRepo[Node]
-
-) extends NodeType[Node](classOf[Node], "node", null, null, repo)
 
 
 
