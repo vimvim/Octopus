@@ -18,7 +18,8 @@ class RenderingFacade {
 
     content match {
       case content:TextContent => renderer = SpringContextHolder.getContext.getBean("textRenderer").asInstanceOf[Renderer[T]]
-      case content:StructuredContent => renderer = SpringContextHolder.getContext.getBean("structuredRenderer").asInstanceOf[Renderer[T]]
+      case content:StructuredContent => renderer = SpringContextHolder.getContext.getBean("childRenderer").asInstanceOf[Renderer[T]]
+      // case content:StructuredContent => renderer = SpringContextHolder.getContext.getBean("schemaRenderer").asInstanceOf[Renderer[T]]
     }
 
     renderer.render(repository, label, content)

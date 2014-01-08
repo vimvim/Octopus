@@ -29,4 +29,6 @@ trait NodesRepo[T <: Node] {
 
   def totalCount: Long
 
+  def findChildSlugs(node: T):List[String]
+
 }

@@ -5,10 +5,11 @@ import java.util
 import scala.beans.BeanProperty
 import javax.persistence._
 
-import org.springframework.beans.factory.annotation.{Autowired, Configurable}
+import org.springframework.beans.factory.annotation.{Qualifier, Autowired, Configurable}
 
 import octorise.repo.octopus.schema.{AttributeDescriptor, SchemaDescriptor, SchemasRegistry, NodeType}
 import octorise.repo.octopus.services.SchemaRefService
+import octorise.repo.octopus.repositories.NodesRepo
 
 
 /**
@@ -57,6 +58,11 @@ abstract class Node {
   @Transient
   @Autowired
   var schemasRegistry: SchemasRegistry =_
+
+  @Transient
+  @Autowired
+  @Qualifier("nodesRepo")
+  var nodesRepo: NodesRepo[Node] =_
 
   def beginEdit(schemasRegistry: SchemasRegistry, schemaService: SchemaRefService) = {
     this.schemasRegistry = schemasRegistry
@@ -110,6 +116,10 @@ abstract class Node {
     applyAttributeValue(schemaName, name, value)
   }
   */
+
+  def getChildSlugs: List[String] = {
+    nodesRepo.findChildSlugs(this)
+  }
 
   def removeAttribute(schemaName: String, name: String) {
 

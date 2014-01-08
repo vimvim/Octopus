@@ -207,6 +207,23 @@ abstract class AbstractNodesRepo[T <: Node: Manifest](val entityClass: Class[T])
     }
   }
 
+  /**
+   * Find all slugs of the child nodes
+   *
+   * @param node        Parent node
+   * @return            List of the child nodes slugs
+   */
+  def findChildSlugs(node: T):List[String] = {
+
+    // We use native query here for performance reason.
+    val query = entityManager.createNativeQuery("SELECT slug FROM nodes WHERE parent_id=:parent_id")
+    query.setParameter("parent_id", node.id)
+
+    val res = query.getResultList.toList
+
+    res.asInstanceOf[List[String]]
+  }
+
   private def singleResultOf(q:String, params:Map[String, _]): Option[T] = {
 
     val query = entityManager.createQuery(q)
