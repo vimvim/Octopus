@@ -1,11 +1,17 @@
 package controllers
 
-import play.api.mvc.{SimpleResult, Action, Controller}
-import org.springframework.beans.factory.annotation.{Qualifier, Autowired}
+import scala.concurrent.duration._
+
 import akka.actor.ActorRef
 import akka.pattern.ask
-import octorise.repo.Repository
-import octorise.presenter.{Location, PresentContent}
+import akka.util.Timeout
+
+import play.api.mvc.{SimpleResult, Action, Controller}
+import org.springframework.beans.factory.annotation.{Qualifier, Autowired}
+
+import octorise.repo.{AbsoluteLocation, Repository}
+import octorise.presenter.PresentContent
+
 
 /**
  * Content controller.
@@ -20,11 +26,13 @@ class Content extends Controller {
 
   @Autowired
   @Qualifier("presenter")
-  var rootRepository: Repository =_
+  var rootRepository: Repository[_] =_
 
   def renderContent = Action.async {
 
-    (presenter ? PresentContent("root", Location(rootRepository, "/test"))).mapTo[SimpleResult]
+    implicit val timeout = Timeout(3 seconds)
+
+    (presenter ? PresentContent("root", rootRepository, AbsoluteLocation("/test"))).mapTo[SimpleResult]
 
     // Ok(views.html.index("Application is ready."))
   }

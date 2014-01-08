@@ -12,7 +12,7 @@ import spring.SpringContextHolder
 @Component("renderingFacade")
 class RenderingFacade {
 
-  def render[T](repository: Repository, label: String, content: T): Either[RenderedContent, Future[RenderedContent]] = {
+  def render[T](repository: Repository[T], label: String, content: T): Either[RenderedContent, Future[RenderedContent]] = {
 
     var renderer:Renderer[T] = null
 

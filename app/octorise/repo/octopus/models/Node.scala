@@ -153,6 +153,14 @@ abstract class Node {
     }
   }
 
+  /**
+   * Get attribute value
+   *
+   * @param schemaName      Name of the attributes schema
+   * @param name            Attribute name
+   * @tparam T              Attribute value type
+   * @return
+   */
   def attr[T](schemaName: String, name: String):Option[T] = {
 
     val schema = schemasRegistry.getSchema(schemaName)
@@ -187,8 +195,28 @@ abstract class Node {
     }
   }
 
-  def attrs(schemaName: String):Map[String, Attribute] = {
+  /**
+   * Get all attributes from specified schema.
+   *
+   * @param schemaName      Attributes schema name
+   * @return
+   */
+  def attrs(schemaName: String):Map[String, Attribute[_]] = {
 
+    val schema = schemasRegistry.getSchema(schemaName)
+    val schemaRef = schemaRefService.getRef(schema)
+
+    var retVal = Map[String, Attribute[_]]()
+
+    val itr = attributes.iterator()
+    while (itr.hasNext) {
+
+      val attr = itr.next()
+
+      if (attr.getSchemaRef.equals(schemaRef) && attr.getName.equals(name)) retVal = retVal + (attr.name -> attr)
+    }
+
+    retVal
   }
 
   protected def findAttribute[T](schemaRef: SchemaRef, name: String): Option[Attribute[T]] ={

@@ -20,7 +20,7 @@ class TextRenderer extends Renderer[TextContent] {
    * @param content         Content to render
    * @return
    */
-  def render(repository: Repository, label: String, content: TextContent): Either[RenderedContent, Future[RenderedContent]] = {
+  def render(repository: Repository[TextContent], label: String, content: TextContent): Either[RenderedContent, Future[RenderedContent]] = {
     Left(RenderedContent(label, "", content.content))
   }
 }

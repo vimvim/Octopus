@@ -80,6 +80,7 @@ class Tweets extends Controller  {
   def index3 = Transactional { Action {
 
     // This is for testing only
+    /*
     val contentRepo = SpringContextHolder.getContext.getBean("contentRepo", classOf[ContentRepo])
     val nodesRepo = SpringContextHolder.getContext.getBean("nodesRepo", classOf[NodesRepo[Node]])
 
@@ -91,6 +92,7 @@ class Tweets extends Controller  {
 
     val content2 = contentRepo.findBySlug(null, "test")
     val node2 = nodesRepo.findBySlug(null, "test")
+    */
 
     Ok(views.html.index("Your new application is ready."))
   }}

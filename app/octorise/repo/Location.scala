@@ -6,8 +6,8 @@ package octorise.repo
  */
 class Location
 
-case class AbsoluteLocation(absolutePath:String) extends Location
+case class AbsoluteLocation(path:String) extends Location
 
-case class RelativeLocation[T](parent:T, relativePath:String) extends Location
+case class RelativeLocation[T](parent:T, path:String) extends Location
 
 

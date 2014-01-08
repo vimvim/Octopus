@@ -143,18 +143,18 @@ abstract class AbstractNodesRepo[T <: Node: Manifest](val entityClass: Class[T])
     }
   }
 
-  private def singleResultOf(q:String, params:Map[String, _]): Option[T] = {
+  def findByPath(parent:Node, path: String): Option[T] = {
+    findByPathComponents(parent, path.split("/").to[List])
+  }
 
-    val query = entityManager.createQuery(q)
-    for(entry <- params) {
-      query.setParameter(entry._1, entry._2)
-    }
+  def findByPathComponents(parent:Node, pathComponents: List[String]): Option[T] = {
 
-    val res = query.getResultList
-    if (res.size()>0) {
-      Some(res.get(0).asInstanceOf[T])
-    } else {
-      None
+    val slug = pathComponents.head
+    val restPathComponents = pathComponents.tail
+
+    findBySlug(parent, slug) match {
+      case Some(node) => if (restPathComponents.isEmpty) Some(node) else findByPathComponents(node, restPathComponents)
+      case None => None
     }
   }
 
@@ -204,6 +204,21 @@ abstract class AbstractNodesRepo[T <: Node: Manifest](val entityClass: Class[T])
       }
 
       case None => None
+    }
+  }
+
+  private def singleResultOf(q:String, params:Map[String, _]): Option[T] = {
+
+    val query = entityManager.createQuery(q)
+    for(entry <- params) {
+      query.setParameter(entry._1, entry._2)
+    }
+
+    val res = query.getResultList
+    if (res.size()>0) {
+      Some(res.get(0).asInstanceOf[T])
+    } else {
+      None
     }
   }
 

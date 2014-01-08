@@ -17,6 +17,6 @@ class ContentNodeType @Autowired()(
   baseType: NodeType[Node],
 
   @Autowired @Qualifier("contentRepo")
-  repo: ContentRepo
+  repo: NodesRepo[Content]
 
-) extends NodeType[Content](classOf[Content], "content", baseType, null, repo.asInstanceOf[NodesRepo[Content]])
+) extends NodeType[Content](classOf[Content], "content", baseType, null, repo)

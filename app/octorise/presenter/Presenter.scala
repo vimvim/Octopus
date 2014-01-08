@@ -1,25 +1,25 @@
 package octorise.presenter
 
-import akka.actor.Actor
+
 
 import scala._
 import scala.concurrent.duration._
 import scala.concurrent.duration.FiniteDuration
 import scala.concurrent.{Await, Promise, Future}
+import scala.concurrent.Future
 
 import akka.actor._
 import akka.pattern.{ after, ask, pipe }
 import akka.routing.RoundRobinRouter
 import akka.util.Timeout
+import akka.actor.Actor
+
+import org.springframework.beans.factory.annotation.{Autowired, Configurable}
 
 import octorise.repo._
-import scala.concurrent.Future
 import octorise.repo.octopus.models.Content
 import octorise.repo.ContentResponse
-import octorise.presenter.RenderedContent
 import octorise.repo.RedirectResponse
-import octorise.presenter.PresentContent
-import org.springframework.beans.factory.annotation.{Autowire, Configurable}
 
 
 /**
@@ -28,7 +28,7 @@ import org.springframework.beans.factory.annotation.{Autowire, Configurable}
  * @param label       Content name in the parent container. Useful for identifying subcontent.
  * @param location    Content location
  */
-case class PresentContent(label: String, repository:Repository, location:Location)
+case class PresentContent[T](label: String, repository:Repository[T], location:Location)
 
 sealed class RenderResponse()
 
@@ -42,7 +42,10 @@ case class RenderTimeout(label:String) extends RenderResponse
 @Configurable
 class Presenter extends Actor {
 
-  @Autowire
+  import context.system
+  import context.dispatcher
+
+  @Autowired
   var renderingFacade:RenderingFacade = _
 
   def receive: Actor.Receive = {
@@ -51,24 +54,13 @@ class Presenter extends Actor {
 
       // Tracer.log(s"$label: Present content")
 
-      // Capture sender val
-      // val sender = this.sender
-
-      import context.system
-      import context.dispatcher
-
       renderContent(label, repository, location) match {
         case Left(renderedContent) => sender ! renderedContent
         case Right(future) => future pipeTo sender
       }
-
-
   }
 
-  private def renderContent(label: String, repository:Repository, location:Location):Either[RenderedContent, Future[RenderedContent]] = {
-
-    import context.system
-    import context.dispatcher
+  private def renderContent[T](label: String, repository:Repository[T], location:Location):Either[RenderedContent, Future[RenderedContent]] = {
 
     getContent(label, repository, location) match {
 
@@ -85,12 +77,9 @@ class Presenter extends Actor {
     }
   }
 
-  private def getContent(label: String, repository:Repository, location:Location): Either[ContentResponse, Future[ContentResponse]] = {
+  private def getContent[T](label: String, repository:Repository[T], location:Location): Either[Response, Future[Response]] = {
 
-    import context.system
-    import context.dispatcher
-
-    def handleAnswer(answer: Either[Response, Future[Response]]):Either[ContentResponse, Future[ContentResponse]] = {
+    def handleAnswer(answer: Either[Response, Future[Response]]):Either[Response, Future[Response]] = {
 
       answer match {
 
@@ -98,21 +87,25 @@ class Presenter extends Actor {
 
           response match {
             case redirectResponse:RedirectResponse => handleAnswer(redirectResponse.repository.get(redirectResponse.location))
-            case contentResponse:ContentResponse => Left(contentResponse)
+            case contentResponse:ContentResponse[T] => Left(contentResponse)
           }
 
         case Right(future) =>
 
           // TODO: There will be problem if content repository will return Future[RedirectResponse]]
 
-          Right(future.asInstanceOf[Future[ContentResponse]])
+          Right(future.asInstanceOf[Future[ContentResponse[T]]])
       }
     }
 
     handleAnswer(repository.get(location))
   }
 
-  private def render(repository: Repository, label: String, content: ContentResponse): Either[RenderedContent, Future[RenderedContent]] = {
-    renderingFacade.render(repository, label, content.content)
+  private def render[T](repository: Repository[T], label: String, response: Response): Either[RenderedContent, Future[RenderedContent]] = {
+
+    response match {
+      case contentResponse: ContentResponse[T] => renderingFacade.render(repository, label, contentResponse.content)
+      case notFoundResponse: NotFoundResponse => Left(RenderedContent(label, "", "Not found"))
+    }
   }
 }

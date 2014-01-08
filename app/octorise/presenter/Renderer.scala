@@ -16,5 +16,5 @@ trait Renderer[T] {
    * @param content         Content to render
    * @return
    */
-  def render(repository:Repository, label:String, content:T):Either[RenderedContent, Future[RenderedContent]]
+  def render(repository:Repository[T], label:String, content:T):Either[RenderedContent, Future[RenderedContent]]
 }

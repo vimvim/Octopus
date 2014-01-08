@@ -19,6 +19,8 @@ import octorise.repo.{Repository, RelativeLocation}
 import play.api.libs.concurrent.Akka
 import octorise.repo.octopus.ReferencedLocation
 import org.springframework.stereotype.Service
+import play.api.Play.current
+
 
 /**
  * Renderer for structured content ( content which is consist of the several sub nodes )
@@ -38,7 +40,7 @@ class StructuredRenderer extends Renderer[Content] {
    * @param content         Content to render
    * @return
    */
-  def render(repository:Repository, label:String, content: Content): Either[RenderedContent, Future[RenderedContent]] = {
+  def render(repository:Repository[Content], label:String, content: Content): Either[RenderedContent, Future[RenderedContent]] = {
 
     // TODO: Think about storing schema name in the special attribute of the Content
     val subContent = content.attrs("content")
@@ -66,7 +68,9 @@ class StructuredRenderer extends Renderer[Content] {
       // timeout message. If timeout message will arrive before content message - content will be scheduled
       // for delivery to the client over websocket.
 
-        import Akka.system
+        // import Akka.system.
+
+        implicit val ec = Akka.system.dispatcher
 
         // import context.dispatcher
         implicit val timeout = Timeout(60 seconds)
@@ -107,6 +111,8 @@ class StructuredRenderer extends Renderer[Content] {
 
     // import context.system
     // import context.dispatcher
+
+    implicit val ec = Akka.system.dispatcher
 
     // And finally we will put rendered subcontent into cells inside parent layout
     Right(Future.fold(futures)(Map[String, String]()) {
