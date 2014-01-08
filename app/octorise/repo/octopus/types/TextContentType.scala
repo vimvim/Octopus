@@ -23,4 +23,4 @@ class TextContentType @Autowired()(
   @Autowired @Qualifier("textContentRepo")
   repo: TextContentRepo
 
-) extends NodeType[TextContent](classOf[TextContent], "content", baseType, service, repo)
+) extends NodeType[TextContent](classOf[TextContent], "text_content", baseType, service, repo)

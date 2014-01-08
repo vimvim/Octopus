@@ -20,4 +20,4 @@ class StructuredContentType @Autowired()(
   @Autowired @Qualifier("structuredContentRepo")
   repo: StructuredContentRepo
 
-) extends NodeType[StructuredContent](classOf[StructuredContent], "content", baseType, service, repo)
+) extends NodeType[StructuredContent](classOf[StructuredContent], "structured_content", baseType, service, repo)

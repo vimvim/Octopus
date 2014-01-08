@@ -1,14 +1,15 @@
 package octorise.repo.octopus.repositories
 
-import octorise.repo.octopus.models.Content
-import org.springframework.stereotype.Repository
+import scala.reflect.Manifest
+
 import org.springframework.transaction.annotation.{Propagation, Transactional}
+
+import octorise.repo.octopus.models.Content
 
 /**
  *
  */
-@Repository("contentRepo")
 @Transactional(readOnly = false, propagation = Propagation.REQUIRED)
-class ContentRepoImpl extends AbstractContentRepo[Content] {
+abstract class AbstractContentRepo[ T<: Content: Manifest] extends AbstractNodesRepo[T] with ContentRepo[T] {
 
 }

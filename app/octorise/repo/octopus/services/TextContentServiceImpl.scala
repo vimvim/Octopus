@@ -12,7 +12,7 @@ import octorise.repo.octopus.repositories.{TextContentRepo, NodesRepo}
  */
 @Service("textContentService")
 @Transactional(readOnly = false, propagation = Propagation.REQUIRED)
-class TextContentServiceImpl extends ContentServiceImpl[TextContent] with ContentService[TextContent] {
+class TextContentServiceImpl extends ContentServiceImpl[TextContent] with TextContentService {
 
   @Autowired
   @Qualifier("textContentRepo")

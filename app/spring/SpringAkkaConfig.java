@@ -1,8 +1,11 @@
 package spring;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 
+import akka.routing.RoundRobinRouter;
+import octorise.presenter.Presenter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Lazy;
@@ -29,6 +32,19 @@ public class SpringAkkaConfig {
     @Lazy
     public ActorSystem actorSystem() {
         return Akka.system();
+    }
+
+    @Bean(name = "presenter")
+    @Scope("singleton")
+    @Lazy
+    public ActorRef presentersDispatcher() {
+
+        List<ActorRef> presenters = new LinkedList<ActorRef>();
+        for(int idx=0;idx<5;idx++) {
+            presenters.add(SpringAkka.createActor(actorSystem(), Presenter.class));
+        }
+
+        return actorSystem().actorOf(Props.empty().withRouter(RoundRobinRouter.create(presenters)));
     }
 
     @Bean(name = "consoleSessionManager")

@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.{Qualifier, Autowired}
 
 import octorise.repo.{AbsoluteLocation, Repository}
 import octorise.presenter.PresentContent
+import org.springframework.context.annotation.Lazy
 
 
 /**
@@ -18,6 +19,7 @@ import octorise.presenter.PresentContent
  * Responsible for rendering content.
  */
 @org.springframework.stereotype.Controller
+@Lazy
 class Content extends Controller {
 
   @Autowired

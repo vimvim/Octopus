@@ -10,6 +10,6 @@ import octorise.repo.octopus.models.StructuredContent
  */
 @Repository("structuredContentRepo")
 @Transactional(readOnly = false, propagation = Propagation.REQUIRED)
-class StructuredContentRepoImpl extends ContentRepoImpl[StructuredContent] with StructuredContentRepo {
+class StructuredContentRepoImpl extends AbstractContentRepo[StructuredContent] with StructuredContentRepo {
 
 }

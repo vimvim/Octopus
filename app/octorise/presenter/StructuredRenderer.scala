@@ -1,9 +1,5 @@
 package octorise.presenter
 
-import octorise.repo.octopus.models.Content
-import scala.concurrent.Future
-import akka.util.Timeout
-import scala.concurrent.duration.FiniteDuration
 
 import scala._
 import scala.concurrent.duration._
@@ -12,20 +8,26 @@ import scala.concurrent.{Await, Promise, Future}
 
 import akka.actor._
 import akka.pattern.{ after, ask, pipe }
-import akka.routing.RoundRobinRouter
 import akka.util.Timeout
+
 import org.springframework.beans.factory.annotation.{Qualifier, Autowired}
-import octorise.repo.{Repository, RelativeLocation}
-import play.api.libs.concurrent.Akka
-import octorise.repo.octopus.ReferencedLocation
+import org.springframework.context.annotation.Lazy
 import org.springframework.stereotype.Service
+
+import octorise.repo.{Repository, RelativeLocation}
+import octorise.repo.octopus.ReferencedLocation
+import octorise.repo.octopus.models.Content
+
 import play.api.Play.current
+import play.api.libs.concurrent.Akka
+
 
 
 /**
  * Renderer for structured content ( content which is consist of the several sub nodes )
  */
 @Service("structuredRenderer")
+@Lazy
 class StructuredRenderer extends Renderer[Content] {
 
   @Autowired
