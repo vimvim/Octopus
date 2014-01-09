@@ -20,6 +20,9 @@ import octorise.repo._
 import octorise.repo.octopus.models.Content
 import octorise.repo.ContentResponse
 import octorise.repo.RedirectResponse
+import org.springframework.stereotype.Component
+import org.springframework.context.annotation.{Lazy, Scope}
+import play.api.Logger
 
 
 /**
@@ -39,8 +42,12 @@ case class RenderTimeout(label:String) extends RenderResponse
 /**
  *
  */
-@Configurable
+@Component("Presenter.Actor")
+@Scope("prototype")
+@Lazy
 class Presenter extends Actor {
+
+  lazy val log = Logger("application." + this.getClass.getName)
 
   import context.system
   import context.dispatcher
@@ -52,7 +59,7 @@ class Presenter extends Actor {
 
     case PresentContent(label, repository, location) =>
 
-      // Tracer.log(s"$label: Present content")
+      log.debug(s"$label: Present content")
 
       renderContent(label, repository, location) match {
         case Left(renderedContent) => sender ! renderedContent
@@ -64,12 +71,12 @@ class Presenter extends Actor {
 
     getContent(label, repository, location) match {
 
-      case Left(contentResponse) => render(repository, label, contentResponse)
+      case Left(response) => render(repository, label, response)
 
       case Right(getFuture) => Right(getFuture flatMap {
-        contentResponse=>
+        response=>
 
-          render(repository, label, contentResponse) match {
+          render(repository, label, response) match {
             case Left(renderedContent) => Future.successful[RenderedContent](renderedContent)
             case Right(renderFuture) => renderFuture
           }
@@ -86,14 +93,25 @@ class Presenter extends Actor {
         case Left(response) =>
 
           response match {
-            case redirectResponse:RedirectResponse => handleAnswer(redirectResponse.repository.get(redirectResponse.location))
-            case contentResponse:ContentResponse[T] => Left(contentResponse)
+
+            case redirectResponse:RedirectResponse =>
+              log.debug(s"$label: GetContent: Redirected to ${redirectResponse.location}")
+              handleAnswer(redirectResponse.repository.get(redirectResponse.location))
+
+            case notFoundResponse:NotFoundResponse =>
+              log.debug(s"$label: GetContent: Not found")
+              Left(notFoundResponse)
+
+            case contentResponse:ContentResponse[T] =>
+              log.debug(s"$label: GetContent: Content found")
+              Left(contentResponse)
           }
 
         case Right(future) =>
 
           // TODO: There will be problem if content repository will return Future[RedirectResponse]]
 
+          log.debug(s"$label: GetContent: Future received")
           Right(future.asInstanceOf[Future[ContentResponse[T]]])
       }
     }

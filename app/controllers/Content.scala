@@ -27,10 +27,10 @@ class Content extends Controller {
   var presenter: ActorRef =_
 
   @Autowired
-  @Qualifier("presenter")
+  @Qualifier("octopusRepository")
   var rootRepository: Repository[_] =_
 
-  def renderContent = Action.async {
+  def renderContent(url:String) = Action.async {
 
     implicit val timeout = Timeout(3 seconds)
 

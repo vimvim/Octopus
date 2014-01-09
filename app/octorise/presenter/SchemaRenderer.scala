@@ -48,6 +48,8 @@ class SchemaRenderer extends StructuredRenderer[StructuredContent] {
 
   def render(repository:Repository[StructuredContent], label:String, topContent: StructuredContent): Either[RenderedContent, Future[RenderedContent]] = {
 
+    log.debug(s"Render $label $topContent")
+
     val contentSchema = topContent.contentSchema
     val subContent = topContent.attrs(contentSchema)
 
@@ -56,7 +58,7 @@ class SchemaRenderer extends StructuredRenderer[StructuredContent] {
       val attrName = entry._1
       val attr = entry._2
 
-      // Tracer.log(s"Request subcontent:$subContentLabel url:$subContentUrl")
+      log.debug(s"$label Request subcontent:$attrName ")
 
       // TODO: Check attribute type here and dispatch presentation request only for attributes referenced to nodes.
       // TODO: For simple type attributes - render in-place and create already completed future

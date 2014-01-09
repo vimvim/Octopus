@@ -24,13 +24,15 @@ import octorise.repo.octopus.models.Content
 
 import play.api.Play.current
 import play.api.libs.concurrent.Akka
-
+import play.api.Logger
 
 
 /**
  * Renderer for structured content ( content which is consist of the several sub content pieces )
  */
 abstract class StructuredRenderer[ T <: Content ] extends Renderer[T] {
+
+  lazy val log = Logger("application." + this.getClass.getName)
 
   @Autowired
   @Qualifier("presenter")
@@ -52,7 +54,7 @@ abstract class StructuredRenderer[ T <: Content ] extends Renderer[T] {
 
           if (timedOut) {
             // lateDeliveryActor ! response
-            // Tracer.log(s"$subContentLabel Rendered too late. Send for async delivery. ")
+            log.debug(s"$subContentLabel Rendered too late. Send for async delivery. ")
           }
 
           response
@@ -72,7 +74,7 @@ abstract class StructuredRenderer[ T <: Content ] extends Renderer[T] {
     Future.fold(futures)(Map[String, String]()) {
       (contentMap, response: RenderResponse) =>
 
-      // Tracer.log(s"$label: Got response for subcontent $response")
+        log.debug(s"$label: Got response for subcontent $response")
 
         response match {
           case RenderedContent(subContentLabel, mimeType, data) => contentMap ++ Map((subContentLabel, data))

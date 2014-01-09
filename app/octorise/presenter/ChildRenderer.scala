@@ -25,7 +25,6 @@ import org.springframework.context.annotation.Lazy
 import org.springframework.stereotype.Service
 
 import octorise.repo.{Repository, RelativeLocation}
-import octorise.repo.octopus.ReferencedLocation
 
 import play.api.Play.current
 import play.api.libs.concurrent.Akka
@@ -48,9 +47,13 @@ class ChildRenderer extends StructuredRenderer[Content] {
    */
   def render(repository: Repository[Content], label: String, topContent: Content): Either[RenderedContent, Future[RenderedContent]] = {
 
+    log.debug(s"Render $label $topContent")
+
     val childSlugs = topContent.getChildSlugs
 
     val futures = childSlugs.map((slug)=>{
+
+      log.debug(s"$label Request subcontent:$slug ")
 
       implicit val timeout = Timeout(60 seconds)
       val renderingFuture = presenter ? PresentContent(slug, repository, RelativeLocation(topContent, slug))

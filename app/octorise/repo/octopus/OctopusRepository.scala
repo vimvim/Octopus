@@ -27,8 +27,8 @@ class OctopusRepository extends Repository[Node] {
       case absoluteLocation:AbsoluteLocation =>
         // Content referenced by absolute path ( consist of the slug's )
 
-        nodeApiFacade.findByPath(null, absoluteLocation.path) match {
-          case Some(node) => Left(ContentResponse("", node))
+        nodeApiFacade.findByPath[Node](null, absoluteLocation.path) match {
+          case Some(node) => Left(ContentResponse[Node]("", node))
           case None => Left(NotFoundResponse())
         }
 
@@ -50,7 +50,7 @@ class OctopusRepository extends Repository[Node] {
         val parentNode = relativeLocation.parent
         val path = relativeLocation.path
 
-        nodeApiFacade.findBySlug(parentNode, path) match {
+        nodeApiFacade.findBySlug[Node](parentNode, path) match {
           case Some(node) => Left(ContentResponse("", node))
           case None => Left(NotFoundResponse())
         }

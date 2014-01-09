@@ -152,9 +152,15 @@ abstract class AbstractNodesRepo[T <: Node: Manifest](val entityClass: Class[T])
     val slug = pathComponents.head
     val restPathComponents = pathComponents.tail
 
-    findBySlug(parent, slug) match {
-      case Some(node) => if (restPathComponents.isEmpty) Some(node) else findByPathComponents(node, restPathComponents)
-      case None => None
+    if (slug.isEmpty) {
+
+      findByPathComponents(parent, restPathComponents)
+    }  else {
+
+      findBySlug(parent, slug) match {
+        case Some(node) => if (restPathComponents.isEmpty) Some(node) else findByPathComponents(node, restPathComponents)
+        case None => None
+      }
     }
   }
 
