@@ -6,12 +6,15 @@ import akka.actor.ActorRef
 import akka.pattern.ask
 import akka.util.Timeout
 
-import play.api.mvc.{SimpleResult, Action, Controller}
 import org.springframework.beans.factory.annotation.{Qualifier, Autowired}
+import org.springframework.context.annotation.Lazy
+
+import play.api.libs.concurrent.Execution.Implicits.defaultContext
+import play.api.mvc.{SimpleResult, Action, Controller}
 
 import octorise.repo.{AbsoluteLocation, Repository}
-import octorise.presenter.PresentContent
-import org.springframework.context.annotation.Lazy
+import octorise.presenter.{RenderedContent, PresentContent}
+
 
 
 /**
@@ -34,7 +37,9 @@ class Content extends Controller {
 
     implicit val timeout = Timeout(3 seconds)
 
-    (presenter ? PresentContent("root", rootRepository, AbsoluteLocation("/test"))).mapTo[SimpleResult]
+    (presenter ? PresentContent("root", rootRepository, AbsoluteLocation("/test"))).mapTo[RenderedContent].map(renderResponse=>{
+      Ok(renderResponse.content)
+    })
 
     // Ok(views.html.index("Application is ready."))
   }
