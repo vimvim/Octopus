@@ -62,7 +62,13 @@ object ApplicationBuild extends Build {
     "javax.transaction" % "jta" % "1.1" % "provided",
     "commons-dbcp" % "commons-dbcp" % "1.4",
     "org.codehaus.jackson" % "jackson-mapper-asl" % "1.8.5",
-    "org.codehaus.groovy" % "groovy-all" % "2.2.1"
+    "org.codehaus.groovy" % "groovy-all" % "2.2.1",
+
+    "com.google.api-client" % "google-api-client" % "1.17.0-rc",
+    "com.google.oauth-client" % "google-oauth-client" % "1.17.0-rc",
+    "com.google.http-client" % "google-http-client" % "1.17.0-rc",
+    "com.google.http-client" % "google-http-client-jackson" % "1.17.0-rc",
+    "com.google.apis" % "google-api-services-drive" % "v2-rev111-1.17.0-rc"
   )
 
   val main = play.Project(appName, appVersion, appDependencies).settings(
