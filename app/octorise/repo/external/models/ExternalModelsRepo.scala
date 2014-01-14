@@ -5,7 +5,7 @@ import org.springframework.data.jpa.repository.JpaRepository
 /**
  * Base repository for models which is represent external repositories.
  */
-trait ExternalModelsRepo[ T<:ExternalRepo ] extends JpaRepository[T] {
+trait ExternalModelsRepo[ T<:ExternalRepo ] extends JpaRepository[T, Long] {
 
   def find(id: Int): Option[T]
 

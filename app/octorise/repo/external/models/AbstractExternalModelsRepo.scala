@@ -3,14 +3,13 @@ package octorise.repo.external.models
 import scala.reflect.Manifest
 
 import javax.persistence.EntityManager
+import javax.persistence.criteria.{Predicate, CriteriaBuilder, CriteriaQuery, Root}
+import javax.persistence.metamodel.{SingularAttribute, StaticMetamodel}
 
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.jpa.repository.support.SimpleJpaRepository
 import org.springframework.transaction.annotation.Transactional
 import org.springframework.data.jpa.domain.Specification
-import javax.persistence.criteria.{Predicate, CriteriaBuilder, CriteriaQuery, Root}
-import octorise.repo.external.models.ExternalRepo
-import javax.persistence.metamodel.{SingularAttribute, StaticMetamodel}
 
 
 @StaticMetamodel(classOf[ExternalRepo])
@@ -25,10 +24,10 @@ object ExternalRepo_ {
 abstract class AbstractExternalModelsRepo[ T <: ExternalRepo: Manifest ](val entityClass: Class[T], em:EntityManager)
   extends SimpleJpaRepository[T, Long](entityClass, em) with ExternalModelsRepo[T] {
 
-  @Autowired
-  var entityManager: EntityManager = _
+  // @Autowired
+  // var entityManager: EntityManager = _
 
-  def this() = this(manifest[T].erasure.asInstanceOf[Class[T]], entityManager)
+  // def this() = this(manifest[T].erasure.asInstanceOf[Class[T]], entityManager)
 
   protected def hasName(name:String) = {
     new Specification[T]() {

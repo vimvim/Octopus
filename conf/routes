@@ -17,6 +17,9 @@ POST        /auth          @controllers.Auth.auth
 
 GET         /content/*url       @controllers.Content.renderContent(url)
 
+GET         /gdrive/auth/:repoName      @controllers.GDrive.auth(repoName, error="", state="", code="")
+GET         /gdrive/test                @controllers.GDrive.test
+
 GET         /assets/javascripts/routes        @controllers.Application.javascriptRoutes
 
 # Map static resources from the /public folder to the /assets URL path
