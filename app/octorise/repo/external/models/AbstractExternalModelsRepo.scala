@@ -12,22 +12,17 @@ import org.springframework.transaction.annotation.Transactional
 import org.springframework.data.jpa.domain.Specification
 
 
-@StaticMetamodel(classOf[ExternalRepo])
-object ExternalRepo_ {
-  var name:SingularAttribute[ExternalRepo, String] =_
-}
-
 /**
  *
  */
 @Transactional(readOnly = true)
 abstract class AbstractExternalModelsRepo[ T <: ExternalRepo: Manifest ](val entityClass: Class[T], em:EntityManager)
-  extends SimpleJpaRepository[T, Long](entityClass, em) with ExternalModelsRepo[T] {
+  extends SimpleJpaRepository[T, java.lang.Long](entityClass, em) with ExternalModelsRepo[T] {
 
   // @Autowired
   // var entityManager: EntityManager = _
 
-  // def this() = this(manifest[T].erasure.asInstanceOf[Class[T]], entityManager)
+  def this(em:EntityManager) = this(manifest[T].erasure.asInstanceOf[Class[T]], em)
 
   protected def hasName(name:String) = {
     new Specification[T]() {

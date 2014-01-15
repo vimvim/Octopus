@@ -1,14 +1,19 @@
 package octorise.repo.gdrive.models
 
-import org.springframework.stereotype.Repository
+import javax.persistence.EntityManager
 
-import octorise.repo.external.models.{AbstractExternalModelsRepo, ExternalModelsRepo}
+import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.stereotype.Repository
+import org.springframework.transaction.annotation.Transactional
+
+import octorise.repo.external.models.AbstractExternalModelsRepo
+
 
 /**
  * Repository for GDriveRepo
  */
 @Repository
-class GDriveModelsRepoImpl extends AbstractExternalModelsRepo[GDriveRepo] with GDriveModelsRepo {
+@Transactional(readOnly = true)
+class GDriveModelsRepoImpl @Autowired()(@Autowired em:EntityManager) extends AbstractExternalModelsRepo[GDriveRepo](em) with GDriveModelsRepo {
 
 }
-

@@ -69,4 +69,18 @@ class GDrive extends Controller {
     // Ok(views.html.index("Your new application is ready."))
   }
 
+  /*
+  def test2() = Action {
+
+    gdriveService.get("test") match {
+
+      case Some(repo) =>
+
+        gdriveService.getFile()
+
+    }
+
+  }
+  */
+
 }
