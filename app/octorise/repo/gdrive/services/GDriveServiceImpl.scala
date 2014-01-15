@@ -76,7 +76,7 @@ class GDriveServiceImpl extends GDriveService {
 
     new GoogleBrowserClientRequestUrl(
       CLIENT_ID,
-      redirectURI+repo.name,
+      redirectURI+"?repoName="+repo.name,
       util.Arrays.asList(
         "https://www.googleapis.com/auth/userinfo.email",
         "https://www.googleapis.com/auth/userinfo.profile",
